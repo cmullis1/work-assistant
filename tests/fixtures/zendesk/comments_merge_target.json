@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "id": 7001,
+      "type": "Comment",
+      "author_id": 901,
+      "public": false,
+      "created_at": "2026-10-12T14:05:00Z",
+      "body": "Earlier note on this ticket, before the merged call started.",
+      "plain_body": "Earlier note on this ticket, before the merged call started.",
+      "attachments": [],
+      "via": {"channel": "web"}
+    },
+    {
+      "id": 7002,
+      "type": "Comment",
+      "author_id": 900,
+      "public": false,
+      "created_at": "2026-10-12T18:55:00Z",
+      "body": "Issue Details: receipt printer offline, second caller from the same site\nImpact & Priority: high",
+      "plain_body": "Issue Details: receipt printer offline, second caller from the same site\nImpact & Priority: high",
+      "attachments": [
+        {"id": 6101, "file_name": "printer.png", "content_url": "https://example.invalid/attachments/6101/printer.png", "content_type": "image/png", "size": 1024}
+      ],
+      "via": {"channel": "web"}
+    },
+    {
+      "id": 7003,
+      "type": "Comment",
+      "author_id": 900,
+      "public": true,
+      "created_at": "2026-10-12T19:30:00Z",
+      "body": "Hi Morgan,\n\nThanks for calling. We are tracking the receipt printer issue on this ticket.\n\nDana",
+      "plain_body": "Hi Morgan,\n\nThanks for calling. We are tracking the receipt printer issue on this ticket.\n\nDana",
+      "attachments": [],
+      "via": {"channel": "email"}
+    },
+    {
+      "id": 7004,
+      "type": "Comment",
+      "author_id": 901,
+      "public": true,
+      "created_at": "2026-10-14T10:00:00Z",
+      "body": "Follow-up two days later, after the deadline.",
+      "plain_body": "Follow-up two days later, after the deadline.",
+      "attachments": [],
+      "via": {"channel": "email"}
+    }
+  ]
+}

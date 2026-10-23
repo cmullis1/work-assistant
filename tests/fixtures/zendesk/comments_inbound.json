@@ -1,0 +1,110 @@
+{
+  "comments": [
+    {
+      "id": 5001,
+      "type": "Comment",
+      "author_id": -1,
+      "public": false,
+      "created_at": "2026-10-12T18:41:50Z",
+      "body": "Incoming call from +1 555 0100 to the Example Support Line.",
+      "html_body": "<div>Incoming call from +1 555 0100 to the Example Support Line.</div>",
+      "plain_body": "Incoming call from +1 555 0100 to the Example Support Line.",
+      "attachments": [],
+      "via": {"channel": "voice", "source": {"rel": "inbound"}}
+    },
+    {
+      "id": 5002,
+      "type": "VoiceComment",
+      "author_id": 700,
+      "public": false,
+      "created_at": "2026-10-12T18:48:50Z",
+      "body": "Call from Morgan Ellis answered by Dana Whitfield. Duration 7 minutes.",
+      "html_body": "<div>Call from Morgan Ellis answered by Dana Whitfield. Duration 7 minutes.</div>",
+      "data": {
+        "call_id": 88001,
+        "answered_by_id": 900,
+        "answered_by_name": "Dana Whitfield",
+        "call_duration": 420,
+        "started_at": "2026-10-12T18:41:50Z",
+        "recording_url": "https://example.invalid/recordings/88001.mp3",
+        "transcription_status": "completed"
+      },
+      "attachments": []
+    },
+    {
+      "id": 5003,
+      "type": "Comment",
+      "author_id": 801,
+      "public": false,
+      "created_at": "2026-10-12T18:49:10Z",
+      "body": "Call transcript:\n\nAgent: Thanks for calling Example Support, this is Dana.\nCaller: Hi, my checkout page shows a blank banner.",
+      "html_body": "<div>Call transcript:</div>",
+      "plain_body": "Call transcript:\n\nAgent: Thanks for calling Example Support, this is Dana.\nCaller: Hi, my checkout page shows a blank banner.",
+      "attachments": [],
+      "via": {"channel": "voice", "source": {"rel": null}}
+    },
+    {
+      "id": 5004,
+      "type": "Comment",
+      "author_id": -1,
+      "public": false,
+      "created_at": "2026-10-12T18:49:15Z",
+      "body": "Call summary:\n\nCaller reported a blank banner on checkout. Agent collected details and promised an email.",
+      "html_body": "<div>Call summary:</div>",
+      "plain_body": "Call summary:\n\nCaller reported a blank banner on checkout. Agent collected details and promised an email.",
+      "attachments": [],
+      "via": {"channel": "voice", "source": {"rel": null}}
+    },
+    {
+      "id": 5005,
+      "type": "Comment",
+      "author_id": 900,
+      "public": false,
+      "created_at": "2026-10-12T19:30:00Z",
+      "body": "Issue Details: banner blank on checkout\nImpact & Priority: normal, orders still complete",
+      "html_body": "<div>Issue Details: banner blank on checkout</div><div>Impact &amp; Priority: normal, orders still complete</div>",
+      "plain_body": "Issue Details: banner blank on checkout\nImpact & Priority: normal, orders still complete",
+      "attachments": [
+        {
+          "id": 6001,
+          "file_name": "banner.png",
+          "content_url": "https://example.invalid/attachments/6001/banner.png",
+          "content_type": "image/png",
+          "size": 20480
+        },
+        {
+          "id": 6002,
+          "file_name": "notes.pdf",
+          "content_url": "https://example.invalid/attachments/6002/notes.pdf",
+          "content_type": "application/pdf",
+          "size": 51200
+        }
+      ],
+      "via": {"channel": "web"}
+    },
+    {
+      "id": 5006,
+      "type": "Comment",
+      "author_id": 900,
+      "public": true,
+      "created_at": "2026-10-12T21:00:00Z",
+      "body": "Hi Morgan,\n\nThanks for calling today. I logged the blank banner and will follow up.\n\nDana",
+      "html_body": "<div>Hi Morgan,</div><div>Thanks for calling today. I logged the blank banner and will follow up.</div>",
+      "plain_body": "Hi Morgan,\n\nThanks for calling today. I logged the blank banner and will follow up.\n\nDana",
+      "attachments": [],
+      "via": {"channel": "email"}
+    },
+    {
+      "id": 5007,
+      "type": "Comment",
+      "author_id": 901,
+      "public": true,
+      "created_at": "2026-10-13T09:00:00Z",
+      "body": "Hi Morgan, Priya here. The banner fix is live.",
+      "html_body": "<div>Hi Morgan, Priya here. The banner fix is live.</div>",
+      "plain_body": "Hi Morgan, Priya here. The banner fix is live.",
+      "attachments": [],
+      "via": {"channel": "email"}
+    }
+  ]
+}

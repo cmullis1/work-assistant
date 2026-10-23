@@ -1,0 +1,16 @@
+{
+  "id": 4102,
+  "subject": "Following up on yesterday",
+  "created_at": "2026-10-12T19:10:00Z",
+  "priority": "normal",
+  "tags": ["voice"],
+  "via": {
+    "channel": "voice",
+    "source": {
+      "from": {"phone": "+1 555 0199", "name": "Example Support Line"},
+      "to": {"phone": "+1 555 0142", "name": "Casey Rowan"},
+      "rel": "outbound"
+    }
+  },
+  "custom_fields": []
+}

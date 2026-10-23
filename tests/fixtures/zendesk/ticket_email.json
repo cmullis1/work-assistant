@@ -1,0 +1,16 @@
+{
+  "id": 4104,
+  "subject": "Question about invoices",
+  "created_at": "2026-10-12T20:00:00Z",
+  "priority": "low",
+  "tags": ["email"],
+  "via": {
+    "channel": "email",
+    "source": {
+      "from": {"address": "casey.rowan@example.com", "name": "Casey Rowan"},
+      "to": {"address": "support@example.com", "name": "Example Support"},
+      "rel": null
+    }
+  },
+  "custom_fields": []
+}

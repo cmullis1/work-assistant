@@ -1,0 +1,8 @@
+{
+  "users": [
+    {"id": 900, "name": "Dana Whitfield", "email": "dana.whitfield@example.com", "role": "agent"},
+    {"id": 901, "name": "Priya Raman", "email": "priya.raman@example.com", "role": "admin"},
+    {"id": 700, "name": "Morgan Ellis", "email": "morgan.ellis@example.com", "role": "end-user"},
+    {"id": 801, "name": "Call Assistant", "email": "assistant@example.invalid", "role": "system"}
+  ]
+}

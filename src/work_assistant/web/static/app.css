@@ -1,0 +1,1915 @@
+/* Work Assistant styles: the "bold & dark" look.
+   Every color, font, size, spacing and radius is a custom property defined here, once, in a single dark
+   set (the app has no light theme). Markup (index.html, app.js, charts.js) uses class names only, so
+   the look can change here without touching data code. Values follow the design-pass spec, section 4. */
+
+:root {
+  color-scheme: dark;
+
+  /* Colors: surfaces */
+  --page: #0b1020;            /* page background */
+  --bar: #11182d;             /* app bar */
+  --card-top: #18213b;        /* card gradient top; solid raised surfaces (chart dot rims, pills) */
+  --card-bottom: #121a30;     /* card gradient, bottom */
+  --inset: #0f1730;           /* inset blocks, group headers, inputs */
+  --grid: #233056;            /* card, control and chip borders; chart grid lines */
+  --rule: #1b2542;            /* row dividers inside a card */
+  --base: #2c3a63;            /* chart baselines, dashed placeholders */
+
+  /* Colors: text */
+  --ink: #e8ecf6;             /* primary text */
+  --ink-soft: #c8d0e6;        /* evidence and quoted text */
+  --ink2: #9aa6c4;            /* secondary text, notes and off states */
+  --headline: #ffffff;        /* headline numbers */
+
+  /* Colors: meaning */
+  --accent: #5eead4;          /* good results, better changes, active tab, links, primary buttons */
+  --attention: #fbbf24;       /* missed checks, worse changes, problems, warnings */
+  --unsure: #c4b5fd;
+  --failure: #fb7185;         /* failed runs and error banners */
+  --on-accent: #0b1020;       /* text on a teal button */
+  --focus: #5eead4;
+
+  /* Colors: chart series. The accent and attention hues, stepped down into the dark-mode lightness band
+     the dataviz validator requires against the card surface (all checks pass). */
+  --series-1: #0da996;
+  --series-attn: #b88a05;
+  --series-ref: #9aa6c4;
+
+  /* Tints */
+  --hover: rgba(94, 234, 212, .06);
+  --sel-tint: rgba(94, 234, 212, .12);
+  --attention-row-tint: rgba(251, 191, 36, .07);   /* a flagged table row: softer than a banner */
+  --attention-tint: rgba(251, 191, 36, .10);
+  --attention-edge: rgba(251, 191, 36, .35);
+  --failure-tint: rgba(251, 113, 133, .10);     /* error banners, failed-run rows */
+  --failure-edge: rgba(251, 113, 133, .40);
+  --pto-tint: rgba(196, 181, 253, .14);       /* a PTO day in the heat grid: --unsure's violet, apart from rest and sick */
+  --pto-edge: rgba(196, 181, 253, .55);
+  --accent-tint: rgba(94, 234, 212, .10);
+  --period-band: rgba(154, 166, 196, .08);   /* the chosen period's steps on a trend chart */
+
+  /* Type */
+  --font: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --fs-base: 15px;            /* body text */
+  --fs-label: 13px;           /* panel section labels */
+  --fs-tile: 36px;            /* tile numbers */
+  --fs-lead: 52px;            /* lead numbers: team score, agent score */
+  --fs-detail-head: 22px;     /* call detail header */
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-md: 15px;
+  --fs-lg: 16px;
+  --fs-title: 18px;
+  --fs-big: 20px;
+  --fs-value-narrow: 30px;
+  --fs-lead-narrow: 42px;
+  --fw-medium: 500;
+  --fw-bold: 600;
+  --fw-heavy: 700;
+  --lh-base: 1.45;
+  --lh-num: 1.05;
+  --ls-label: .06em;
+
+  /* Spacing */
+  --sp-1: 2px;
+  --sp-2: 4px;
+  --sp-3: 6px;
+  --sp-4: 8px;
+  --sp-5: 10px;
+  --sp-6: 12px;
+  --sp-7: 14px;
+  --sp-8: 16px;
+  --gap-panel: 16px;
+  --pad-page: 22px;
+  --pad-page-x: 32px;         /* the page's side padding */
+  --pad-page-narrow: 14px;
+  --pad-card: 16px 18px;
+  --pad-bar: 14px;
+
+  /* Radius and sizes */
+  --radius-sm: 6px;
+  --radius: 8px;
+  --radius-lg: 10px;
+  --radius-card: 12px;
+  --radius-pill: 999px;
+  --edge: 3px;                /* accent strips: banner edges, problem-call rows, timeline steps */
+  --page-max: 1760px;         /* fills most of a screen about 2000px wide (no side panel) */
+  --page-max-shell: none;     /* beside the side panel the page takes the whole width left of it */
+  --tile-min: 190px;
+  --input-wide: 260px;
+  --input-name: 180px;         /* a name field beside the email made from it (Team leads' add row) */
+  --input-num: 90px;
+  --log-max: 260px;
+  --list-max: 352px;          /* a list inside a panel scrolls past this height (.list-scroll) */
+  --list-max-tall: 528px;     /* a longer list's box (.list-scroll.tall: Techs, an import preview): half as tall again */
+  --slide: 280ms;             /* a part sliding open or shut (Trends' graph; TREND_SLIDE_MS in app.js) */
+  --list-roomy: 240px;        /* a .roomy panel's list in an even row: room for a few entries before any are added */
+  --list-roomy-lg: 480px;     /* a .roomy.lg panel's list: room for most of a team before it scrolls */
+  --even-reserve: 120px;      /* the page above and below an even row (app bar, gaps), so it can reach the window's foot */
+  --roster-started-w: 8em;    /* the Techs tables' fixed columns: Started, Region and the row's buttons */
+  --roster-region-w: 7em;     /* fits the add row's Region choice, a region's whole name and its arrow */
+  --roster-act-w: 10em;
+  --stale-opacity: .55;       /* a screen kept on show, faded, while the next answer loads (.stale) */
+  --loading-bar-h: 3px;       /* the loading bar over a screen that waits for an answer */
+  --loading-delay: 150ms;     /* the fade and the bar wait this long, so a quick answer never flickers */
+  --rating-day-w: 3em;        /* a rating's day, so its ticket and chip line up down the list */
+  --tile-min-narrow: 140px;
+  --mname-w: 22em;
+  --mtrack-min: 80px;
+  --mdelta-w: 12em;      /* "20% of calls · +3.6 pts (+2 calls) vs Sep 27", on up to two lines */
+  --mnum-w: 2.5em;
+  --filter-gap: var(--sp-5);
+  --coach-min: 40px;
+  --legend-sw-w: 12px;
+  --legend-sw-h: 8px;
+  --tl-step-min: 8em;          /* a timeline step's width once the strip wraps (640px and below) */
+  --trow-score-w: 3em;
+  --side-w: 210px;             /* the side panel's width, from 1024px; below that it is an overlay */
+  --heat-1: rgba(94, 234, 212, .16);   /* the heat grid's shades, stepped up from the accent: tickets touched */
+  --heat-2: rgba(94, 234, 212, .32);
+  --heat-3: rgba(94, 234, 212, .55);
+  --heat-4: #5eead4;
+  --heat-cell-h: 38px;         /* a heat grid cell's height */
+  --heat-week-cell-h: 46px;    /* a By week cell's height: the week's tickets over its "5/5 shifts" */
+  --heat-stack-week-h: 52px;   /* a stacked By week cell's height: its first day, then the week's tickets over "5/5 shifts" */
+  --heat-cell-pad: 1px;        /* the space around a heat cell inside its row, as a table cell's own padding */
+  --heat-col-min: 52px;        /* a day column's minimum width in the all-techs grid up to 14 days */
+  --heat-day-min-mid: 30px;    /* the narrowest a day column is drawn in the all-techs grid from 15 days (.mid); a longer range scrolls */
+  --heat-week-min: 64px;       /* a week column's minimum width in the By week grid (a cell holds the tickets and "5/5 shifts") */
+  --heat-tot-w: 5em;          /* the Total and Flags columns of a heat grid */
+  --heat-flag-w: 4.5em;
+  --heat-name-w: 11em;         /* the tech-name column of a heat grid */
+  --z-scrim: 19;               /* the page dimmed behind the folded side panel while it is open, just under it */
+  --z-panel: 20;
+  --z-toast: 30;              /* the toast stays above the page and the side panel overlay */
+  --z-dialog: 40;              /* a dialog and its scrim cover everything, the toast included */
+  --scrim: rgba(5, 8, 18, .62);   /* the page dimmed behind a dialog */
+  --dialog-w: 360px;           /* a dialog's width (Edit techs) */
+  --tap-min: 44px;             /* a touch screen's smallest control: a finger's width (iPad and phone design §6) */
+  --fs-touch-field: 16px;      /* a field's text on a touch screen: below 16px iOS Safari zooms the page on a tap */
+  --card-min: 300px;           /* a table row shown as a card at its narrowest (.atable.cards): two to a row from twice this */
+  --card-fig-min: 80px;        /* a figure's box in a card, its number over its label ("Declined / missed" on two lines) */
+  --card-label-w: 120px;       /* the label before each line of a card ("First – last action  8:05 AM – 4:37 PM") */
+  --tlist-min: 440px;          /* the Tickets list column's minimum beside the detail, from 1120px */
+  --spark-w: 96px;             /* the Agents table's 8-week sparkline (charts.js reads these two) */
+  --spark-h: 26px;
+  --miss-min: 12em;            /* a one-line Agents row's most-missed column; narrower falls back to two lines */
+  --search-w: 15em;
+  --transcript-max: 420px;
+  --ev-min: 16em;
+  --input-tags: 12em;
+  --rb-summary-min: 14em;
+  --rb-num-slot: 3em;      /* narrow rubric card: room left beside the summary, enough for the number only */
+  --ref-text-max: 320px;
+  --form-label-w: 11em;
+  --form-hint-indent: 11.6em;
+  --outcome-w: 2.5em;
+  --cmp-ev-min: 14em;          /* each evidence column of a model test's side-by-side view */
+  --cmp-check-min: 10em;       /* its check column, so a label never breaks inside a word */
+}
+
+/* -- page ----------------------------------------------------------------------------------------- */
+
+* { box-sizing: border-box; }
+
+html { background: var(--page); }
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  line-height: var(--lh-base);
+}
+
+.app {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 0 var(--pad-page-x) var(--pad-page);
+  overflow-wrap: break-word;
+}
+
+/* While a screen waits for an answer it doesn't have, what it shows stays, faded (.stale), under the loading bar, until
+   the new answer replaces it (app.js markLoading and clearScreen). Both wait a moment, so a quick answer never
+   flickers; the fade ends at once. */
+.stale { opacity: var(--stale-opacity); transition: opacity .2s ease var(--loading-delay); }
+/* The loading bar: a thin line at the top of the screen, in the gap above it, with an accent segment sliding across
+   it. It stays in view while the page scrolls and takes no room (its margins add up to minus its height), so showing
+   it moves nothing. */
+.loading-bar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-panel);
+  height: var(--loading-bar-h);
+  margin: calc(-0.5 * (var(--pad-page) + var(--loading-bar-h))) 0 calc(0.5 * (var(--pad-page) - var(--loading-bar-h)));
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--accent-tint);
+  animation: loading-in .2s ease var(--loading-delay) both;
+}
+.loading-bar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 30%;
+  border-radius: inherit;
+  background: var(--accent);
+  animation: loading-slide 1.2s ease-in-out infinite;
+}
+.loading-bar[hidden] { display: none; }
+@keyframes loading-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes loading-slide { from { transform: translateX(-100%); } to { transform: translateX(340%); } }
+
+a { color: var(--accent); text-decoration: none; }
+@media (hover: hover) { a:hover { text-decoration: underline; } }
+a:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: var(--sp-1); }
+code { font-family: var(--font-mono); font-size: var(--fs-sm); }
+b, strong { font-weight: var(--fw-bold); }
+
+/* The app bar spans the full window: its background and bottom rule are drawn past the centered column
+   with a clipped shadow, so the page never scrolls sideways. */
+.appbar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5) var(--pad-page);
+  flex-wrap: wrap;
+  padding: var(--pad-bar) 0;
+  margin-bottom: var(--pad-page);
+  background: var(--bar);
+  box-shadow: 0 0 0 100vmax var(--bar), 0 1px 0 100vmax var(--grid);
+  clip-path: inset(0 -100vmax -1px);
+}
+.appbar .title { font-weight: var(--fw-heavy); font-size: var(--fs-title); margin-right: auto; color: var(--headline); }
+.appbar .badge {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--attention);
+  border: 1px solid var(--attention-edge);
+  background: var(--attention-tint);
+  border-radius: var(--radius-pill);
+  padding: var(--sp-1) var(--sp-5);
+}
+
+.tabs { display: flex; gap: var(--sp-2) var(--sp-3); flex-wrap: wrap; }
+.tabs a {
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--radius);
+  font-size: var(--fs-base);
+  color: var(--ink2);
+  border-bottom: 2px solid transparent;
+}
+@media (hover: hover) { .tabs a:hover { color: var(--ink); background: var(--hover); text-decoration: none; } }
+.tabs a.on {
+  color: var(--accent);
+  font-weight: var(--fw-bold);
+  border-bottom-color: var(--accent);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+/* -- banners (every tab) -------------------------------------------------------------------------- */
+
+.banners:empty { display: none; }
+/* Failure: a failed run, an unknown submission, a review error. */
+.banner {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5) var(--sp-6);
+  flex-wrap: wrap;
+  border: 1px solid var(--failure-edge);
+  border-left: var(--edge) solid var(--failure);
+  border-radius: var(--radius-lg);
+  background: var(--failure-tint);
+  color: var(--failure);
+  padding: var(--sp-5) var(--sp-7);
+  margin-bottom: var(--gap-panel);
+  font-size: var(--fs-base);
+  overflow-wrap: anywhere;
+}
+.banner b { color: var(--ink); }
+.banner a { color: inherit; text-decoration: underline; font-weight: var(--fw-bold); }
+/* Attention: a run awaiting confirmation, a not-counted call, "changes apply from the next run". */
+.banner.info {
+  border-color: var(--attention-edge);
+  border-left-color: var(--attention);
+  background: var(--attention-tint);
+  color: var(--attention);
+}
+.banner .text { flex: 1 1 var(--input-wide); min-width: 0; }
+
+/* -- cards: panels and tiles --------------------------------------------------------------------- */
+
+.panel {
+  background: linear-gradient(160deg, var(--card-top), var(--card-bottom));
+  border: 1px solid var(--grid);
+  border-radius: var(--radius-card);
+  padding: var(--pad-card);
+  margin-bottom: var(--gap-panel);
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+/* A panel's section heading. Panels built by the shared helper mark it .panel-label; older direct h4s
+   inside a panel get the same look. */
+.panel-label, .panel > h4 {
+  margin: 0 0 var(--sp-4);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink2);
+}
+.panel .sub { font-size: var(--fs-sm); color: var(--ink2); margin: calc(-1 * var(--sp-2)) 0 var(--sp-5); }
+/* A panel that only holds a note (notePanel in app.js: a manager's Settings, saying who sets shifts, time off and 1:1
+   dates): the page's note in a panel's box, the panel's padding all its room. */
+.panel > .note:only-child { margin: 0; }
+
+/* Panel rows: side-by-side panels. Two-column rows stack, in source order, below 1024px; the lead tile
+   rows go two-up below 900px and stack below 640px. */
+.panel-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap-panel);
+  margin-bottom: var(--gap-panel);
+  align-items: start;
+}
+.panel-row > * { min-width: 0; margin-bottom: 0; }
+.panel-row.stretch { align-items: stretch; }
+.panel-row.cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.panel-row.cols-4-lead { grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr)); align-items: stretch; }
+.panel-row.cols-5-lead { grid-template-columns: minmax(0, 1.4fr) repeat(4, minmax(0, 1fr)); align-items: stretch; }
+.panel-row.cols-1-2 { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }   /* wider list from 1120px, below */
+.panel-row.cols-2-1 { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+.stack { display: flex; flex-direction: column; gap: var(--gap-panel); min-width: 0; }
+.stack > * { margin-bottom: 0; }
+
+/* A group header inside a table (tr.group-head) or a list (div.group-head, h4.group-head). The label look
+   applies to all of them; only the block headers take the box. A table row's cells have their own padding,
+   and a box on the row would break the stacked scorecard's grid rows. */
+.group-head {
+  background: var(--inset);
+  color: var(--ink2);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+}
+div.group-head, h3.group-head, h4.group-head {
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--radius-sm);
+  margin: var(--sp-5) 0 var(--sp-3);
+}
+.atable tr.group-head td {
+  background: var(--inset);
+  color: var(--ink2);
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--grid);
+}
+@media (hover: hover) { .atable tr.group-head:hover td { background: var(--inset); } }
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--tile-min), 1fr));
+  gap: var(--gap-panel);
+  margin-bottom: var(--gap-panel);
+}
+.tile {
+  background: linear-gradient(160deg, var(--card-top), var(--card-bottom));
+  border: 1px solid var(--grid);
+  border-radius: var(--radius-card);
+  padding: var(--pad-card);
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.tile .k {
+  font-size: var(--fs-label);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink2);
+}
+.tile .v, .tile-num {
+  font-size: var(--fs-tile);
+  font-weight: var(--fw-heavy);
+  line-height: var(--lh-num);
+  color: var(--headline);
+  margin: var(--sp-3) 0 var(--sp-2);
+  font-variant-numeric: tabular-nums;
+}
+.lead-num, .tile .v.lead-num {
+  font-size: var(--fs-lead);
+  font-weight: var(--fw-heavy);
+  line-height: 1;
+  color: var(--headline);
+  font-variant-numeric: tabular-nums;
+}
+.tile .v .of { font-size: var(--fs-lg); font-weight: normal; color: var(--ink2); }
+.tile .v.v-text { font-size: var(--fs-big); line-height: 1.25; padding: var(--sp-2) 0; overflow-wrap: anywhere; }
+.tile .d { font-size: var(--fs-sm); color: var(--ink2); }
+.tile .d.good { color: var(--accent); }
+.tile .d.bad { color: var(--attention); }
+.tile .d.flat { color: var(--ink2); }
+
+.placeholder {
+  border: 1px dashed var(--base);
+  border-radius: var(--radius);
+  padding: var(--sp-7);
+  color: var(--ink2);
+  font-size: var(--fs-base);
+  text-align: center;
+}
+
+.note-banner {
+  font-size: var(--fs-sm);
+  color: var(--ink2);
+  border: 1px solid var(--grid);
+  border-radius: var(--radius);
+  padding: var(--sp-4) var(--sp-6);
+  margin-bottom: var(--gap-panel);
+  background: var(--inset);
+}
+
+.scroll { overflow-x: auto; position: relative; }  /* keeps absolutely placed .sr-only text inside */
+/* A box with no .sr-only text that was never a positioned .scroll (tableBox's `plain`): left unpositioned, because a
+   positioned scroll box gets its own layer in Chrome and its text then draws with grayscale, not colour, smoothing. */
+.scroll.plain { position: static; }
+.muted { color: var(--ink2); }
+.note { font-size: var(--fs-sm); color: var(--ink2); }
+/* A note under a table, above its panel's actions (Settings' 1:1 schedule). */
+.note.table-note { margin-top: var(--sp-4); }
+.okv { color: var(--accent); font-weight: var(--fw-bold); }
+.flag.crit { color: var(--attention); font-weight: var(--fw-bold); }
+.flag.failure { color: var(--failure); font-weight: var(--fw-bold); }
+.unsure { color: var(--unsure); font-weight: var(--fw-bold); }
+.good { color: var(--accent); }
+.warn { color: var(--attention); }
+
+/* Chips: small labels. Pills: rounded choice buttons (one .on). */
+.chip {
+  display: inline-block;
+  font-size: var(--fs-sm);
+  padding: var(--sp-1) var(--sp-4);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--grid);
+  background: var(--inset);
+  margin: var(--sp-1) var(--sp-2) 0 0;
+  color: var(--ink2);
+  overflow-wrap: anywhere;
+}
+.chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.chips .chip { margin: 0; }
+/* Tags: a small label per item, in a row that wraps (.tags; Team leads' techs, a tag per tech). A tag names something
+   and isn't a control: the panel's subtle background, ink text, a small radius. */
+.tags { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.tag {
+  display: inline-block;
+  max-width: 100%;
+  font-size: var(--fs-sm);
+  padding: 0 var(--sp-4);
+  border: 1px solid var(--grid);
+  border-radius: var(--radius-sm);
+  background: var(--inset);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.pills { display: flex; flex-wrap: wrap; gap: var(--sp-4); }
+.pill, button.pill {
+  display: inline-block;
+  padding: var(--sp-4) var(--sp-8);
+  border-radius: var(--radius-pill);
+  background: var(--card-top);
+  border: 1px solid var(--grid);
+  color: var(--ink);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-medium);
+}
+@media (hover: hover) { .pill:hover, button.pill:hover { border-color: var(--accent); background: var(--card-top); text-decoration: none; } }
+.pill.on, button.pill.on { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: var(--fw-heavy); }
+.pill:focus-visible { border-radius: var(--radius-pill); }
+
+/* -- tables --------------------------------------------------------------------------------------- */
+
+.atable { width: 100%; border-collapse: collapse; font-size: var(--fs-md); }
+.atable th {
+  text-align: left;
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-sm);
+  color: var(--ink2);
+  border-bottom: 1px solid var(--grid);
+  padding: var(--sp-4) var(--sp-5);
+  white-space: nowrap;
+}
+.atable td { border-bottom: 1px solid var(--rule); padding: var(--sp-4) var(--sp-5); color: var(--ink); vertical-align: top; }
+.atable tbody tr:last-child td { border-bottom: 0; }
+.atable .num { text-align: right; font-variant-numeric: tabular-nums; }
+.atable tr.flagrow td { background: var(--attention-row-tint); }
+@media (hover: hover) { .atable tr:hover td { background: var(--hover); } }
+@media (hover: hover) { .atable tr.logrow:hover td { background: transparent; } }
+
+/* -- filters (report screens) ---------------------------------------------------------------------- */
+
+.filters { display: flex; gap: var(--filter-gap); flex-wrap: wrap; align-items: center; margin-bottom: var(--gap-panel); }
+.filt {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  max-width: 100%;
+  background: var(--card-top);
+  border: 1px solid var(--grid);
+  border-radius: var(--radius);
+  padding: var(--sp-2) var(--sp-3) var(--sp-2) var(--sp-7);
+  font-size: var(--fs-base);
+  color: var(--ink);
+}
+@media (hover: hover) { .filt:hover { border-color: var(--base); } }
+.filt:focus-within { border-color: var(--accent); }
+.filt b { color: var(--ink2); font-weight: var(--fw-medium); white-space: nowrap; }
+.filt select { border: 0; background: transparent; max-width: 100%; min-width: 0; padding: var(--sp-2); color: var(--ink); }
+.filt select:focus, .filt input:focus { outline: 0; }
+/* The period picker and "Compare to": a select, then From and To dates for a custom range. Each pair wraps
+   as a unit, and on a narrow screen the dates stack (see the 640px block). */
+.period-pick, .period-pick .range { display: flex; flex-wrap: wrap; gap: var(--filter-gap); align-items: center; min-width: 0; max-width: 100%; }
+.stepper { display: inline-flex; gap: var(--filter-gap); align-items: center; }
+.filters > .message:empty { display: none; }
+/* The period a screen covers, named once above its tiles. */
+.period-head { margin: 0 0 var(--sp-6); font-size: var(--fs-lg); font-weight: var(--fw-bold); color: var(--ink); overflow-wrap: anywhere; }
+.period-head .day-off { margin-left: var(--sp-8); font-weight: var(--fw-medium); }
+/* The choice "Mark as day off" turns into: Sick, PTO and Cancel side by side, wrapping rather than widening the row. */
+.day-off-choice { display: inline-flex; flex-wrap: wrap; gap: var(--sp-2); align-items: center; }
+.period-note { margin-bottom: var(--sp-5); font-size: var(--fs-md); color: var(--ink); }
+
+/* -- charts (charts.js) ---------------------------------------------------------------------------- */
+
+svg.chart { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--font); }
+svg.chart.spark { display: inline-block; width: auto; vertical-align: middle; }
+.chart-box { min-width: 0; }
+.chart .grid { stroke: var(--grid); stroke-width: 1; }
+.chart .base { stroke: var(--base); stroke-width: 1; }
+.chart .tick { fill: var(--ink2); font-size: var(--fs-xs); font-variant-numeric: tabular-nums; }
+.chart .dlabel { fill: var(--ink); font-size: var(--fs-sm); font-weight: var(--fw-bold); }
+.chart .dlabel.ref { fill: var(--ink2); font-weight: var(--fw-medium); }
+.chart .empty { fill: var(--ink2); font-size: var(--fs-sm); }
+.chart .line { fill: none; stroke: var(--series-1); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.chart .line.thin { stroke-width: 1.5; }
+.chart .line.ref { stroke: var(--series-ref); stroke-width: 1.5; stroke-dasharray: 4 3; }
+/* A chart's hovercard (charts.js tip): a small card of the app's own, beside the pointer, with a title, the days it
+   covers, and a row per figure, each keyed to its mark: the line, a dot, the team's dashed line. On a phone it is no
+   wider than the window less the 8px charts.js keeps at each side, so it always fits. */
+.hovercard { position: fixed; z-index: var(--z-toast); pointer-events: none; min-width: 180px;
+  max-width: min(380px, calc(100vw - 2 * var(--sp-4)));
+  background: linear-gradient(160deg, var(--card-top), var(--card-bottom)); border: 1px solid var(--grid);
+  border-radius: var(--radius-lg); padding: var(--sp-5) var(--sp-6); box-shadow: 0 10px 28px rgba(0, 0, 0, .45);
+  font-size: var(--fs-sm); color: var(--ink); line-height: var(--lh-base); }
+.hovercard[hidden] { display: none; }
+.hv-title { font-weight: var(--fw-bold); color: var(--headline); }
+.hv-sub, .hv-foot, .hv-line { color: var(--ink2); font-size: var(--fs-xs); }
+.hv-rows { display: grid; grid-template-columns: auto 1fr auto auto; gap: var(--sp-2) var(--sp-4); align-items: baseline;
+  margin-top: var(--sp-4); }
+.hv-key { width: 14px; align-self: center; }
+.hv-key.line { border-top: 2.5px solid var(--series-1); }
+.hv-key.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--series-1); justify-self: center; }
+.hv-key.team { border-top: 2px dashed var(--series-ref); }
+.hv-value { font-weight: var(--fw-bold); color: var(--headline); font-variant-numeric: tabular-nums; text-align: right; }
+.hv-note { color: var(--ink2); font-size: var(--fs-xs); white-space: nowrap; }
+.hv-foot { margin-top: var(--sp-4); }
+/* A hovercard's list (a day's actions at one minute): a key, then what happened and on which ticket. */
+.hv-item { display: flex; gap: var(--sp-4); align-items: baseline; margin-top: var(--sp-4); }
+.hv-item .hv-key { flex: none; width: 4px; height: 12px; border-radius: 1px; align-self: center; background: var(--series-1); }
+.hv-item .hv-key.note { background: var(--series-ref); }
+.hv-item .hv-key.call { background: var(--unsure); }
+.hv-item-head { font-weight: var(--fw-bold); color: var(--headline); }
+.hv-item-text { color: var(--ink-soft); }
+/* The day chart's hover target over one minute's actions: invisible, a pointer when a click opens the ticket. */
+.chart .day-hit { fill: transparent; }
+.chart .day-hit.link { cursor: pointer; }
+.chart .dot { fill: var(--series-1); stroke: var(--card-top); stroke-width: 2; }
+.chart .line.faint { stroke: var(--ink2); stroke-width: 1.2; opacity: .28; }
+/* A tech lifted by pointing at their ranking row (charts.js peek): their faint line brighter, with its end label. */
+.chart .line.faint.peek { stroke: var(--ink); stroke-width: 2; opacity: .9; }
+.chart .dot.peek-only { fill: var(--ink); stroke: none; }
+.chart .dlabel.peek-only { fill: var(--ink-soft); font-weight: var(--fw-medium); }
+/* A narrow Trends graph's latest figures, on a line above it in place of its end labels (charts.js readout, iPad and
+   phone design §10.3): the focus's first name and figure in the series color (.me), the team's (.ref), a tech lifted
+   from the ranking (.peek), and the step they are from at the right (.when). */
+.trend-readout { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-2) var(--sp-6);
+  margin-bottom: var(--sp-4); font-size: var(--fs-md); color: var(--ink2); }
+.trend-readout b { font-size: var(--fs-big); font-weight: var(--fw-heavy); color: var(--headline);
+  font-variant-numeric: tabular-nums; }
+.trend-readout .me b { color: var(--series-1); }
+.trend-readout .ref { border-top: 0; padding: 0; }   /* not the Rubric's .ref block */
+.trend-readout .peek b { color: var(--ink-soft); font-weight: var(--fw-bold); }
+.trend-readout .when { margin-left: auto; font-size: var(--fs-sm); }
+.chart .dot.ref { fill: var(--series-ref); }
+.chart .dot.part { fill: var(--card-top); stroke: var(--series-1); stroke-width: 2; }
+.chart .dot.raw { fill: var(--series-1); stroke: none; }
+.chart-legend .k4 { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--series-1);
+  vertical-align: middle; margin: 0 var(--sp-2) 0 var(--sp-5); }
+.chart.spark .dot { stroke-width: 1; }
+/* A finger on a chart reads it (charts.js showCard, iPad and phone design §10.1): a sideways slide moves the hovercard
+   from mark to mark while an up or down one still scrolls the page, and the mark the finger reads is `.on`, lit as a
+   hovered one is. */
+svg.chart { touch-action: pan-y; }
+.chart .dot.faint { opacity: 0; }
+@media (hover: hover) { .chart .hit:hover .dot.faint { opacity: 1; } }
+.chart .hit.on .dot.faint { opacity: 1; }
+.chart .bar { fill: var(--series-1); opacity: .55; }
+.chart .bar.last { opacity: 1; }
+@media (hover: hover) { .chart .hit:hover .bar { opacity: 1; } }
+.chart .hit.on .bar { opacity: 1; }
+.chart .fillbar { fill: var(--series-1); }
+.chart .hitarea { fill: transparent; }
+.chart .guide { stroke: var(--base); stroke-width: 1; visibility: hidden; }
+@media (hover: hover) { .chart .hit:hover .guide { visibility: visible; } }
+.chart .hit.on .guide { visibility: visible; }
+@media (hover: hover) { .chart .hit:hover .dot { stroke-width: 3; } }
+.chart .hit.on .dot { stroke-width: 3; }
+.chart .marker { stroke: var(--ink2); stroke-width: 1; stroke-dasharray: 3 2; }
+.chart .period-band { fill: var(--period-band); }
+.chart .marker-flag { fill: var(--ink2); }
+
+.chart-legend { font-size: var(--fs-sm); color: var(--ink2); margin-bottom: var(--sp-3); }
+.chart-legend .k1, .chart-legend .k2 {
+  display: inline-block;
+  width: var(--sp-8);
+  height: 0;
+  border-top: 2px solid var(--series-1);
+  vertical-align: middle;
+  margin: 0 var(--sp-2) 0 var(--sp-5);
+}
+.chart-legend .k1:first-child { margin-left: 0; }
+.chart-legend .k2 { border-top: 2px dashed var(--series-ref); }
+
+/* one tech's day: shift as the period band, actions as bars, a long gap in attention */
+.chart .bar.act, .chart .bar.note, .chart .bar.call { opacity: 1; }
+.chart .bar.note { fill: var(--series-ref); }
+.chart .bar.call { fill: var(--unsure); }
+.chart .gapband { fill: var(--attention-tint); stroke: var(--attention-edge); stroke-dasharray: 4 3; }
+.chart .gaplabel { fill: var(--attention); font-size: var(--fs-xs); font-weight: var(--fw-bold); }
+.chart .shiftlabel { fill: var(--accent); font-size: var(--fs-xs); }
+.chart-legend .sw { display: inline-block; width: var(--legend-sw-w); height: var(--legend-sw-h); border-radius: var(--sp-1); margin: 0 var(--sp-3) 0 var(--sp-6); vertical-align: middle; }
+.chart-legend .sw:first-child { margin-left: 0; }
+.chart-legend .sw.act { background: var(--series-1); }
+.chart-legend .sw.note { background: var(--series-ref); }
+.chart-legend .sw.call { background: var(--unsure); }
+.chart-legend .sw.shift { background: var(--period-band); border: 1px solid var(--grid); }
+
+/* ranked bars (most-missed checks) */
+.mrow {
+  display: grid;
+  grid-template-columns: minmax(0, var(--mname-w)) minmax(var(--mtrack-min), 1fr) var(--mnum-w) var(--mdelta-w);
+  align-items: center;
+  gap: var(--sp-4);
+  font-size: var(--fs-md);
+  padding: var(--sp-3) var(--sp-2);
+  border-radius: var(--radius-sm);
+  border-bottom: 1px solid var(--rule);
+}
+.mrow:last-child { border-bottom: 0; }
+@media (hover: hover) { .mrow:hover { background: var(--hover); } }
+.mname { color: var(--ink); overflow-wrap: anywhere; }
+@media (hover: hover) { a.mname:hover { text-decoration: underline; } }
+.mtrack { min-width: 0; }
+.mnum { font-weight: var(--fw-heavy); font-variant-numeric: tabular-nums; text-align: right; color: var(--headline); }
+.mdelta { font-size: var(--fs-sm); color: var(--ink2); }
+.mdelta.worse { color: var(--attention); }
+.mdelta.better { color: var(--accent); }
+
+/* -- team overview --------------------------------------------------------------------------------- */
+
+.atable tr.rowlink { cursor: pointer; }
+.more-toggle { margin-top: var(--sp-4); }
+.atable td a { font-weight: var(--fw-bold); }
+.atable td.spark-cell { padding-top: 0; padding-bottom: 0; vertical-align: middle; }
+/* One line per agent (the overview's Agents table when its panel is wide enough, see fitRowMode): the
+   headers may wrap, the figures stay on one line, and the most-missed check wraps in a column at least
+   --miss-min wide. A panel that can't give it that width gets the two-line rows below. */
+.atable.one-line th { white-space: normal; vertical-align: bottom; }
+.atable.one-line td { white-space: nowrap; vertical-align: middle; }
+/* Two lines per row (the overview's Agents table in a narrower panel, the rubric tables, version history,
+   run history): line one's cells sit over line two's with no rule between them. Headers may wrap so a
+   table fits its column; line one's figures stay on one line, and each table lets its long-text cells
+   wrap. */
+.atable.two-line th { white-space: normal; vertical-align: bottom; }
+.atable.two-line thead tr.line1 th { border-bottom: 0; padding-bottom: var(--sp-1); }
+.atable.two-line thead tr.line2 th { padding-top: 0; }
+.atable.two-line tr.line1 td { white-space: nowrap; border-bottom: 0; padding-bottom: var(--sp-2); }
+.atable.two-line tr.line2 td { padding-top: 0; vertical-align: middle; }
+/* A row group: one tbody per agent, check or run. It is one hover target with one rule under it, however
+   many of its rows are showing, and the last group has none. The Team table's add rows (tbody.add-row) are a row
+   group for their rule and layout only, so they don't light up as one. */
+.atable tbody.row-group td { border-bottom: 0; }
+.atable tbody.row-group { border-bottom: 1px solid var(--rule); }
+.atable tbody.row-group:last-child { border-bottom: 0; }
+@media (hover: hover) { .atable tbody.row-group:not(.add-row):hover tr:not(.edit-row) td { background: var(--hover); } }
+.atable.two-line td.miss, .atable.one-line td.miss { white-space: normal; overflow-wrap: anywhere; color: var(--ink2); }
+.atable.one-line td.miss { min-width: var(--miss-min); }
+/* Version history: version, saved and the link on line one, the note on its own line under them. */
+.atable.versions td.ver-link { text-align: right; }
+.atable.versions td.note-cell { overflow-wrap: anywhere; }
+/* Run history: the run, kind, window and status (with its action under it) on line one, the figures on
+   line two, then the log row. The window may wrap so the table fits its column; a failed run is tinted
+   across all its lines in the failure color. */
+.atable.runs tr.line1 td.run-window { white-space: normal; }
+.atable.runs td.run-state button { display: block; margin-top: var(--sp-2); }
+.atable.runs tr.line2 td { font-variant-numeric: tabular-nums; }
+.atable.runs tr.logrow td { padding-top: 0; }
+.atable.runs tbody.flagged td { background: var(--failure-tint); }
+
+.ptk {
+  display: block;
+  border-left: var(--edge) solid var(--attention);
+  padding: var(--sp-4) var(--sp-6);
+  margin: var(--sp-4) 0;
+  background: var(--inset);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: var(--fs-md);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+@media (hover: hover) { a.ptk:hover { background: var(--hover); text-decoration: none; } }
+.ptk .tid { color: var(--accent); font-weight: var(--fw-bold); }
+.nav-note { font-size: var(--fs-sm); color: var(--ink2); margin-top: var(--sp-3); }
+.empty-state { text-align: left; }
+.empty-state b { color: var(--ink); }
+
+/* -- agents ---------------------------------------------------------------------------------------- */
+
+svg.chart.passbar { display: inline-block; width: auto; vertical-align: middle; }
+.passbar .track { fill: var(--grid); }
+.passbar .fillbar { fill: var(--series-1); }
+.passbar .fillbar.crit { fill: var(--series-attn); }
+.passbar .refmark { stroke: var(--ink); stroke-width: 2; }
+.atable td.barcell { vertical-align: middle; }
+.atable td a.checklink { color: var(--ink); font-weight: normal; }
+@media (hover: hover) { .atable td a.checklink:hover { color: var(--accent); } }
+
+.legend { font-weight: normal; font-size: var(--fs-sm); margin-left: var(--sp-4); color: var(--ink2); text-transform: none; letter-spacing: normal; }
+.legend .sw {
+  display: inline-block;
+  width: var(--legend-sw-w);
+  height: var(--legend-sw-h);
+  border-radius: var(--sp-1);
+  background: var(--series-1);
+  margin: 0 var(--sp-2) 0 var(--sp-4);
+  vertical-align: middle;
+}
+.legend .sw.ref { width: 2px; height: var(--legend-sw-w); border-radius: 0; background: var(--ink); }
+/* The agent pills, with the period picker at the end of the row. */
+.filters > .pills + .period-pick { margin-left: auto; }
+/* The pass-rate table's "no coaching targets" line is a message, not a row to hover. */
+@media (hover: hover) { .atable tr.group-empty:hover td { background: transparent; } }
+
+.coach-form textarea { width: 100%; resize: vertical; display: block; }
+.coach-list { margin-top: var(--sp-6); }
+.coach {
+  border: 1px solid var(--rule);
+  border-left: var(--edge) solid var(--grid);
+  background: var(--inset);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: var(--sp-5) var(--sp-6);
+  margin-bottom: var(--sp-4);
+  font-size: var(--fs-md);
+  min-height: var(--coach-min);
+}
+.coach-head { display: flex; justify-content: space-between; align-items: center; gap: var(--sp-4); margin-bottom: var(--sp-2); }
+.coach-date { font-size: var(--fs-sm); color: var(--ink2); font-weight: var(--fw-medium); }
+.coach-body { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* -- tickets --------------------------------------------------------------------------------------- */
+
+.filt.search input { border: 0; background: transparent; width: var(--search-w); max-width: 100%; min-width: 0; color: var(--ink); }
+.filt input[type="date"] { border: 0; background: transparent; color: var(--ink); }
+.clear-filters { align-self: center; font-size: var(--fs-sm); }
+/* The Tickets filters in two fixed rows; each row still wraps on a narrow screen. */
+.filters.stack { display: grid; grid-template-columns: minmax(0, 1fr); }
+.filter-row { display: flex; gap: var(--filter-gap); flex-wrap: wrap; align-items: center; min-width: 0; }
+/* Export sits at the end of the filter bar as a teal-outline (secondary) button. */
+.filters .export {
+  margin-left: auto;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: var(--sp-3) var(--sp-7);
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+}
+@media (hover: hover) { .filters .export:hover { background: var(--accent-tint); text-decoration: none; } }
+
+/* The call list: compact rows. Line one is the score, then the call (ticket, agent, date, priority) with
+   its verdict at the line's end; the misses wrap under it. The column headers are for screen readers only. */
+.atable.tlist thead th { padding: 0; border: 0; }
+.tlist td.trow-score {
+  width: var(--trow-score-w);
+  font-size: var(--fs-title);
+  font-weight: var(--fw-heavy);
+  color: var(--headline);
+  white-space: nowrap;
+}
+.tlist .trow-call { overflow-wrap: anywhere; }
+.tlist .trow-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-1) var(--sp-3); }
+.tlist .trow-agent { color: var(--ink); }
+.tlist .trow-verdict { margin-left: auto; display: inline-flex; align-items: baseline; gap: var(--sp-2); }
+.tlist .trow-missed { margin-top: var(--sp-1); font-size: var(--fs-sm); color: var(--ink2); overflow-wrap: anywhere; }
+.atable tr.sel td { background: var(--sel-tint); }
+@media (hover: hover) { .atable tr.sel:hover td { background: var(--sel-tint); } }
+.atable tr.sel td:first-child { box-shadow: inset var(--edge) 0 0 var(--accent); }
+.atable td.nowrap { white-space: nowrap; }
+/* A number, date or time keeps to one line (the owner, 2026-10-22: "Oct 19, 11:44 AM" broke over two); only a long
+   text cell, a ticket's subject say, makes a row taller. */
+.atable td.num, .atable th.num { white-space: nowrap; }
+/* Recent days' heading line: the week shown, then Earlier and Later. */
+.recent-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-4) var(--sp-6); }
+/* An aging open ticket's tag beside its status. */
+.atable tr.aging .chip { margin-left: var(--sp-4); }
+
+.verdict {
+  display: inline-block;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-base);
+  white-space: nowrap;
+  padding: 0 var(--sp-4);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-pill);
+  vertical-align: middle;
+}
+.verdict.good { color: var(--accent); }
+.verdict.problem { color: var(--attention); }
+.verdict.review_failed { color: var(--failure); }
+.verdict.needs_review { color: var(--unsure); }
+.verdict.not_counted { color: var(--ink2); }
+
+.badge-recheck {
+  display: inline-block;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  padding: 0 var(--sp-4);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--unsure);
+  color: var(--unsure);
+  white-space: nowrap;
+  cursor: help;
+}
+
+.dethead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--gap-panel);
+  margin: var(--sp-2) 0 var(--gap-panel);
+}
+.dethead > * { min-width: 0; }
+.dethead .big { font-size: var(--fs-detail-head); font-weight: var(--fw-heavy); color: var(--headline); line-height: 1.2; }
+.dethead .subject { font-size: var(--fs-md); margin: var(--sp-2) 0; overflow-wrap: anywhere; }
+.dethead .muted { font-size: var(--fs-sm); }
+/* The score and Review again stack on the right of the call header; the list's button sits at the right of
+   its description line. Each button's estimate and messages open under it, right-aligned. */
+.dethead-side { display: flex; flex-direction: column; align-items: flex-end; gap: var(--sp-3); }
+/* The title and its description stay together on the left, so the button's height never pushes the
+   description down. */
+.head-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: var(--sp-3); margin-bottom: var(--sp-5); }
+.head-row .sub { margin-bottom: 0; }
+.dethead-side .review-again, .head-row .review-again { margin-left: auto; text-align: right; }
+.dethead-side .review-again .actions, .head-row .review-again .actions { justify-content: flex-end; }
+.score { white-space: nowrap; }
+.score b { font-size: var(--fs-tile); font-weight: var(--fw-heavy); color: var(--headline); line-height: 1; }
+.score span { color: var(--ink2); }
+.panel.detail .banner { margin-bottom: var(--gap-panel); }
+
+/* The header panel's timeline: timed steps as a strip, then chips for untimed entries and flags. */
+.timeline-block { margin-top: var(--gap-panel); }
+.timeline-strip { display: flex; gap: var(--sp-4); list-style: none; margin: 0; padding: 0; font-size: var(--fs-md); }
+.timeline-step {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-top: var(--edge) solid var(--accent);
+  padding-top: var(--sp-3);
+  color: var(--ink2);
+  overflow-wrap: anywhere;
+}
+.timeline-time { color: var(--ink); font-weight: var(--fw-bold); font-variant-numeric: tabular-nums; }
+.timeline-step.bad { border-top-color: var(--attention); }
+.timeline-step.bad .timeline-time { color: var(--attention); }
+.timeline-step.lim { border-top-style: dashed; border-top-color: var(--base); font-style: italic; }
+.timeline-chips { margin-top: var(--sp-5); }
+.timeline-chip { font-size: var(--fs-md); border-radius: var(--radius-lg); }   /* a long chip wraps as a box */
+.timeline-chip.bad { color: var(--attention); border-color: var(--attention-edge); background: var(--attention-tint); }
+.timeline-chip.lim { font-style: italic; }
+.timeline-block > .note { margin-top: var(--sp-4); }
+
+.det .ic, .cmp .ic { width: var(--outcome-w); text-align: center; white-space: nowrap; }
+.det td.ev, .cmp td.ev { color: var(--ink-soft); font-size: var(--fs-sm); min-width: var(--ev-min); overflow-wrap: anywhere; }
+.ev-text, .override-note { white-space: pre-wrap; overflow-wrap: anywhere; }
+.override { margin-top: var(--sp-2); color: var(--ink); }
+.override-note { color: var(--ink2); margin-top: var(--sp-1); }
+.undo { margin-left: var(--sp-3); }
+button.disagree { white-space: nowrap; }
+.atable tr.override-row td { background: var(--inset); }
+@media (hover: hover) { .atable tr.override-row:hover td { background: var(--inset); } }
+.override-form { padding: var(--sp-3) 0; }
+.override-fields { display: flex; gap: var(--sp-5); flex-wrap: wrap; align-items: flex-start; }
+.override-fields label { display: flex; flex-direction: column; gap: var(--sp-1); font-size: var(--fs-sm); }
+.override-fields label:last-child { flex: 1 1 var(--input-wide); }
+.override-fields b { color: var(--ink2); font-weight: var(--fw-medium); }
+.override-fields textarea { width: 100%; resize: vertical; }
+
+.comment {
+  border-left: var(--edge) solid var(--grid);
+  padding: var(--sp-4) var(--sp-6);
+  margin: var(--sp-4) 0;
+  font-size: var(--fs-md);
+}
+.comment-head { font-size: var(--fs-sm); color: var(--ink2); font-weight: var(--fw-medium); margin-bottom: var(--sp-2); }
+.comment-body { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); }
+.comment.transcript .comment-body { max-height: var(--transcript-max); overflow-y: auto; }
+.merged-comments { margin-top: var(--gap-panel); }
+
+/* -- rubric & rules -------------------------------------------------------------------------------- */
+
+.panel h4 .count, .panel-label .count { font-weight: var(--fw-medium); color: var(--ink2); text-transform: none; letter-spacing: normal; }
+.atable.rb td { vertical-align: middle; }
+.atable.rb td.rb-summary { min-width: var(--rb-summary-min); }
+.atable.rb td.rb-applies { color: var(--ink2); font-size: var(--fs-sm); }
+.atable.rb .rb-title { font-weight: var(--fw-bold); overflow-wrap: anywhere; }
+.atable.rb .rb-num { color: var(--ink2); }
+.atable.rb tr.off td { color: var(--ink2); }
+.atable.rb tr.off .rb-title { text-decoration: line-through; text-decoration-color: var(--base); }
+.atable.rb td.act { white-space: nowrap; text-align: right; }
+.atable.rb td.act button { margin-left: var(--sp-2); }
+.atable tr.edit-row td { background: var(--inset); }
+@media (hover: hover) { .atable tr.edit-row:hover td { background: var(--inset); } }
+/* Tighter side padding than other tables, so the rubric tables and the version history fit their columns
+   at 1024px with the summary at full width. */
+.atable.rb th, .atable.rb td, .atable.versions th, .atable.versions td { padding-left: var(--sp-3); padding-right: var(--sp-3); }
+/* Two lines per check (see fillChecks and the two-line rules above). The rubric's headers stay on one
+   line, and the summary wraps. */
+.atable.rb th { white-space: nowrap; }
+.atable.rb tr.line1 td.rb-summary { white-space: normal; }
+.atable.rb thead td { border-bottom-color: var(--grid); }
+/* If a rubric table ever scrolls sideways in its panel, an open editor stays within the visible width, so
+   long definitions wrap in view at any scroll position. */
+.rb-scroll { container-type: inline-size; }
+.atable.rb tr.edit-row .rb-editor { position: sticky; left: var(--sp-3); max-width: calc(100cqi - 2 * var(--sp-3)); }
+.atable.rb input.pts, .timed input.pts { width: var(--input-num); }
+.tog { display: inline-flex; align-items: center; gap: var(--sp-2); }
+.mlabel { display: none; }
+
+.timed {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-5);
+  margin-top: var(--sp-3);
+  font-size: var(--fs-sm);
+  color: var(--ink2);
+}
+.timed label { display: inline-flex; align-items: center; gap: var(--sp-2); white-space: nowrap; }
+.timed input.tag-field { width: var(--input-tags); max-width: 100%; }
+.timed .chip { margin: 0; }
+.timed .note { flex-basis: 100%; }
+
+.rb-editor { display: grid; gap: var(--sp-5); padding: var(--sp-4) 0; }
+.rb-editor > label, .rb-editor > div { display: flex; flex-direction: column; gap: var(--sp-2); font-size: var(--fs-sm); }
+.rb-editor .actions { flex-direction: row; }
+/* Auto-fail's checkbox sits before its name, and a timed rule's settings keep their own row layout. */
+.rb-editor > label.tog { flex-direction: row; flex-wrap: wrap; align-items: center; }
+.rb-editor .timed { margin-top: 0; }
+.rb-editor b { color: var(--ink2); font-weight: var(--fw-medium); }
+.rb-editor input[type="text"], .rb-editor textarea { width: 100%; max-width: none; }
+.rb-editor textarea { resize: vertical; }
+.rb-def { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); font-size: var(--fs-md); }
+.rb-retired { margin-top: var(--sp-5); font-size: var(--fs-sm); }
+.rb-retired .chip button { margin-left: var(--sp-2); }
+
+.ref { border-top: 1px solid var(--rule); padding: var(--sp-5) 0; font-size: var(--fs-md); }
+.ref:first-of-type { border-top: 0; }
+.ref-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--sp-3); }
+.ref-head b { overflow-wrap: anywhere; }
+.ref-head .act { margin-left: auto; display: inline-flex; gap: var(--sp-3); }
+.ref-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--ink-soft);
+  font-size: var(--fs-sm);
+  background: var(--inset);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-5);
+  margin-top: var(--sp-3);
+  max-height: var(--ref-text-max);
+  overflow-y: auto;
+}
+
+.changes { margin: 0 0 var(--sp-4); padding-left: var(--sp-8); font-size: var(--fs-md); }
+.changes li { margin: var(--sp-2) 0; overflow-wrap: anywhere; }
+.changes li.empty { list-style: none; margin-left: calc(-1 * var(--sp-8)); color: var(--ink2); }
+.agreement-line { font-size: var(--fs-md); }
+
+/* -- forms ---------------------------------------------------------------------------------------- */
+
+.form-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-5);
+  flex-wrap: wrap;
+  padding: var(--sp-4) 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: var(--fs-md);
+}
+.form-row:last-of-type { border-bottom: 0; }
+.form-row > label, .form-row > .label { flex: 0 0 var(--form-label-w); color: var(--ink2); }
+.form-row .hint { flex-basis: 100%; font-size: var(--fs-sm); color: var(--ink2); padding-left: var(--form-hint-indent); }
+/* A select as wide as its longest choice (Test a model's models, with their costs) still fits a narrow panel. */
+.form-row select { max-width: 100%; }
+
+input, select, textarea, button { font: inherit; font-size: var(--fs-md); color: var(--ink); }
+input[type="text"], input[type="email"], input[type="number"], input[type="date"], input[type="time"],
+input[type="search"], select, textarea {
+  background: var(--inset);
+  border: 1px solid var(--grid);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-2) var(--sp-5);
+  color: var(--ink);
+}
+@media (hover: hover) {
+  input[type="text"]:hover, input[type="email"]:hover, input[type="number"]:hover, input[type="date"]:hover,
+  input[type="time"]:hover, select:hover, textarea:hover { border-color: var(--base); }
+}
+option { background: var(--inset); color: var(--ink); }
+::placeholder { color: var(--ink2); opacity: 1; }
+input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); }
+input[type="text"], input[type="email"] { width: var(--input-wide); max-width: 100%; }
+input[type="number"] { width: var(--input-num); }
+input:focus, select:focus, textarea:focus, button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* Buttons: teal outline by default (secondary), solid teal for .primary, quiet for small row actions. */
+button {
+  background: transparent;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent);
+  font-weight: var(--fw-bold);
+  padding: var(--sp-3) var(--sp-7);
+  cursor: pointer;
+}
+@media (hover: hover) { button:hover { background: var(--accent-tint); } }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: var(--fw-heavy); }
+@media (hover: hover) { button.primary:hover { background: var(--ink); border-color: var(--ink); } }
+button.small, button.disagree, input[type="file"]::file-selector-button {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  padding: var(--sp-1) var(--sp-4);
+  border-color: var(--grid);
+  border-radius: var(--radius-sm);
+  color: var(--ink2);
+}
+@media (hover: hover) { button.small:hover, button.disagree:hover, input[type="file"]::file-selector-button:hover { border-color: var(--accent); color: var(--ink); background: var(--hover); } }
+button:disabled { opacity: .5; cursor: default; background: transparent; }
+@media (hover: hover) { button:disabled:hover { opacity: .5; cursor: default; background: transparent; } }
+button.primary:disabled { background: var(--accent); }
+@media (hover: hover) { button.primary:disabled:hover { background: var(--accent); } }
+
+.actions { display: flex; gap: var(--sp-4); align-items: center; flex-wrap: wrap; margin-top: var(--sp-5); }
+.message { font-size: var(--fs-sm); color: var(--ink2); }
+.message.error { color: var(--failure); }
+.message.ok { color: var(--accent); }
+.hint-box {
+  font-size: var(--fs-sm);
+  color: var(--ink2);
+  background: var(--inset);
+  border-left: var(--edge) solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: var(--sp-4) var(--sp-6);
+  margin-top: var(--sp-4);
+}
+.hint-box[hidden] { display: none; }
+
+/* -- settings specifics --------------------------------------------------------------------------- */
+
+/* Team: one row per tech, with the days worked as small labelled boxes. */
+.days-pick { display: inline-flex; gap: var(--sp-2); }
+.days-pick label { display: inline-flex; align-items: center; gap: var(--sp-1); font-size: var(--fs-sm); color: var(--ink2); }
+/* Five columns of controls need about a thousand pixels at the widest display; tighter side padding keeps the whole
+   row, Remove included, inside its panel instead of scrolling. */
+.atable.team-shifts th, .atable.team-shifts td { padding-left: var(--sp-3); padding-right: var(--sp-3); }
+/* The 1:1 schedule's six one-line columns, likewise, in the narrower right-hand column of the hosted copy's Settings
+   (hosted Team design §6) at the 4K display. */
+.atable.prep-schedule th, .atable.prep-schedule td { padding-left: var(--sp-3); padding-right: var(--sp-3); }
+.atable.team-shifts td + td { white-space: nowrap; }   /* the days, hours and date each stay on one line; the table scrolls */
+/* The add rows (tbody.add-row, after the techs) of the PC's Team table and the hosted admin's Techs table
+   (.atable.roster): the name fills the Tech cell; the line under it holds the email, when it needs correcting, across
+   the Tech and the next column, so a long address shows whole even where the Tech column is narrow (the 4K display).
+   The fields are blocks with no minimum width, so they never widen a column. */
+.atable.team-shifts input[type="text"], .atable.team-shifts input[type="email"],
+.atable.roster input[type="text"], .atable.roster input[type="email"] {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+.atable.team-shifts input[hidden], .atable.roster input[hidden] { display: none; }
+/* the techs' last row has no rule under it */
+.atable.team-shifts tbody.add-row, .atable.roster tbody.add-row { border-top: 1px solid var(--rule); }
+.atable.team-shifts tr.add-more td, .atable.roster tr.add-more td { padding-top: 0; }
+/* The line shows only with something on it: the email to correct, or the add row's message. */
+.atable.team-shifts tr.add-more:has(input[hidden]):has(.message:empty),
+.atable.roster tr.add-more:has(input[hidden]):has(.message:empty) { display: none; }
+/* The add row's message (no Zendesk agent at the email, a shift not saved) wraps inside its columns rather than
+   widening them, so the columns don't jump when it shows. */
+.atable.team-shifts tr.add-more .message, .atable.roster tr.add-more .message { contain: inline-size; }
+.atable.team-shifts tr.add-more input[type="email"]:not([hidden]) + .message,
+.atable.roster tr.add-more input[type="email"]:not([hidden]) + .message { margin-top: var(--sp-2); }
+.atable.team-shifts td .message:empty, .atable.roster td .message:empty { display: none; }
+/* Techs (the hosted admin's roster): the Team lead choice is as wide as its longest name, and the email made from the
+   name, under it, may break after its "@" like any email under a name. */
+.atable.roster select { max-width: 100%; }
+/* The list and its add row are two tables (the add row's under the list's scroll box, .list-foot) with the same fixed
+   columns from their colgroups: Started, Region and the buttons take what they need, the tech and their team leads
+   share the rest. */
+.atable.roster { table-layout: fixed; }
+.atable.roster col.col-started { width: var(--roster-started-w); }
+.atable.roster col.col-region { width: var(--roster-region-w); }
+.atable.roster col.col-act { width: var(--roster-act-w); }
+.atable.roster td .note { overflow-wrap: anywhere; }
+.atable.roster tbody.add-row .note { contain: inline-size; }   /* typing a long name never widens the Tech column */
+.atable.roster td.num { white-space: nowrap; }
+/* Team leads' add row: the lead's email, made from the name as it is typed, takes the room left beside the name and
+   Add team lead, so the admin sees the whole address before adding it (it also goes in the Cloudflare Access
+   policy). */
+.people-add input[type="email"] { flex: 1 1 var(--input-wide); }
+.people-add input[type="text"] { flex: 0 1 var(--input-name); min-width: 0; }
+.person-row td.num { white-space: nowrap; }   /* Edit techs and Remove stay side by side */
+
+/* Dialog: a panel over the dimmed page (.dialog-scrim), for a short choice that needs the whole roster in view (Edit
+   techs). Its title is a panel label's size in the page's ink; its buttons sit at its foot, the main one last. */
+.dialog-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-dialog);
+  background: var(--scrim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--pad-page);
+}
+.dialog {
+  width: var(--dialog-w);
+  max-width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  background: linear-gradient(160deg, var(--card-top), var(--card-bottom));
+  border: 1px solid var(--grid);
+  border-radius: var(--radius-card);
+  padding: var(--pad-card);
+}
+.dialog-title { margin: 0 0 var(--sp-4); font-size: var(--fs-md); font-weight: var(--fw-bold); color: var(--ink); }
+.dialog .sub { font-size: var(--fs-sm); color: var(--ink2); margin: 0 0 var(--sp-5); }
+/* A form in a window (Techs' and Time off's Edit): each field under its label, the hint under the field, all at the
+   window's left edge, so a narrow window lines every row up the same way. */
+.dialog .form-row { flex-direction: column; align-items: stretch; gap: var(--sp-2); }
+.dialog .form-row > label, .dialog .form-row > .label { flex: none; }
+.dialog .form-row > input, .dialog .form-row > select, .dialog .form-row > button { align-self: flex-start; }
+.dialog .form-row .hint { padding-left: 0; }
+.dialog-actions { justify-content: flex-end; }
+.dialog-actions .message { margin-right: auto; }
+/* Pick list: one labelled tick box per line, with an optional note at the line's end ("Your tech"). */
+.pick-list { list-style: none; margin: 0; padding: 0; }
+.pick-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding: var(--sp-3) 0;
+  border-top: 1px solid var(--rule);
+}
+.pick-list label { display: inline-flex; align-items: center; gap: var(--sp-4); min-width: 0; overflow-wrap: anywhere; }
+.pick-list .note { white-space: nowrap; }
+/* Change list: dated changes, one per line (Techs' Edit's regions), the date and the choice side by side and Remove
+   at the line's end. The button that adds a line sits under the list. */
+.change-list { list-style: none; margin: 0; padding: 0; }
+.change-list li {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  padding: var(--sp-3) 0;
+  border-top: 1px solid var(--rule);
+}
+.change-list li > button { margin-left: auto; }
+/* File picker (Import from Teams Shifts' export files): its button is the page's small button (it shares
+   button.small's rules above), and the names of the files chosen beside it read in the page's text. */
+input[type="file"] { max-width: 100%; }
+input[type="file"]::file-selector-button {
+  font-family: inherit;
+  margin-right: var(--sp-4);
+  background: transparent;
+  border-style: solid;
+  border-width: 1px;
+  cursor: pointer;
+}
+/* A line whose spaces are part of how it reads (an import preview's "from Oct 4, 2026  Mon-Fri  08:00-17:00"): runs of
+   spaces stay as written, and its figures line up down a list. */
+.kept-spaces { white-space: pre-wrap; font-variant-numeric: tabular-nums; }
+
+.status-set { color: var(--accent); font-weight: var(--fw-bold); }
+.status-unset { color: var(--attention); font-weight: var(--fw-bold); }
+
+.estimate {
+  border: 1px solid var(--grid);
+  border-radius: var(--radius);
+  background: var(--inset);
+  padding: var(--sp-5) var(--sp-6);
+  margin-top: var(--sp-4);
+  font-size: var(--fs-md);
+}
+.estimate[hidden] { display: none; }
+.estimate .over { color: var(--attention); font-weight: var(--fw-bold); }
+
+.run-status { white-space: nowrap; }
+.run-status.complete { color: var(--accent); }
+.run-status.failed, .run-status.submission_unknown { color: var(--failure); font-weight: var(--fw-bold); }
+.run-status.awaiting_confirmation { color: var(--attention); font-weight: var(--fw-bold); }
+
+details.log summary { cursor: pointer; color: var(--accent); font-size: var(--fs-sm); }
+details.log summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+details.log pre {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--ink-soft);
+  background: var(--inset);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-4);
+  max-height: var(--log-max);
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: var(--sp-2) 0 0;
+}
+
+/* -- model tests (Settings: the comparison and one call side by side) ------------------------------- */
+
+.back-link { font-size: var(--fs-sm); margin-bottom: var(--sp-4); }
+.vchanges { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--sp-4) var(--sp-8); }
+.vchanges li { font-size: var(--fs-md); }
+.override-line { margin: 0 0 var(--sp-3); font-size: var(--fs-md); }
+.err-list { list-style: none; margin: 0; padding: 0; }
+.err-list li { padding: var(--sp-3) 0; border-bottom: 1px solid var(--rule); font-size: var(--fs-md); overflow-wrap: anywhere; }
+.err-list li:last-child { border-bottom: 0; }
+.cmp-sides { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap-panel); }
+.cmp-side {
+  background: var(--inset);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: var(--sp-5) var(--sp-6);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.cmp-side-head { font-weight: var(--fw-bold); }
+.cmp-side-score { margin: var(--sp-2) 0; }
+.cmp-side-score b { font-size: var(--fs-big); font-weight: var(--fw-heavy); color: var(--headline); }
+/* The side-by-side table: the evidence columns share what is left after the check and its three outcomes,
+   so each is narrower than the ticket detail's (the rest of the cell's style is shared with .det td.ev). */
+.cmp td.cmp-check { min-width: var(--cmp-check-min); }
+.cmp td.ev { min-width: var(--cmp-ev-min); }
+
+/* -- side panel ------------------------------------------------------------------------------------- */
+
+/* The shell: a side panel of sections beside the page, which keeps the app bar. */
+.shell { display: flex; min-height: 100vh; }
+/* The side panel stays put while the page scrolls: it is one screen tall, so Settings sits at its foot (.gap),
+   and a list taller than the screen scrolls inside the panel. */
+.sidenav {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  width: var(--side-w);
+  flex-shrink: 0;
+  background: var(--bar);
+  border-right: 1px solid var(--grid);
+  padding: var(--pad-bar) var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+.sidenav .brand { font-weight: var(--fw-heavy); font-size: var(--fs-title); color: var(--headline); padding: var(--sp-3) var(--sp-5) var(--pad-page); }
+.sidenav a { padding: var(--sp-4) var(--sp-5); border-radius: var(--radius); color: var(--ink2); border-left: var(--edge) solid transparent; }
+@media (hover: hover) { .sidenav a:hover { color: var(--ink); background: var(--hover); text-decoration: none; } }
+.sidenav a.on { color: var(--accent); font-weight: var(--fw-bold); background: var(--sel-tint); border-left-color: var(--accent); }
+.sidenav .gap { flex: 1; }
+/* A section with screens of its own lists them indented under it; the section stays lit while one is open. */
+.sidenav a.sub { padding-left: calc(var(--sp-5) + var(--sp-8)); font-size: var(--fs-md); }
+.sidenav a.parent.open { color: var(--ink); font-weight: var(--fw-bold); }
+.appbar .title .crumb { color: var(--ink2); font-weight: var(--fw-bold); }
+.appbar .menu { display: none; }
+.shell > .app { flex: 1; min-width: 0; margin: 0; max-width: none; }
+.shell > .app > .inner { max-width: var(--page-max-shell); }
+/* Beside the side panel, the app bar's full-width band stops at the panel's edge: its left reaches back over the
+   page's side padding (--pad-page-x) so no page-colored strip is left between the panel and the bar. */
+.shell .appbar { clip-path: inset(0 -100vmax -1px calc(-1 * var(--pad-page-x))); }
+
+/* -- team activity ---------------------------------------------------------------------------------- */
+
+/* Heat grid: one cell per tech per day (or per week). .hc is a cell; its second class is what the day was:
+   a shade h1-h4 for tickets touched, or zero (signed in, did nothing), miss (missed shift), off (worked a
+   rest day), rest, pto or future. A dot in a cell's corner (.fdot) means a flag. */
+.heat, .heat-stack { --heat-gap: var(--sp-2); border-collapse: separate; border-spacing: var(--heat-gap); width: 100%; font-size: var(--fs-md); }
+.heat th { font-weight: var(--fw-bold); font-size: var(--fs-sm); color: var(--ink2); text-align: center; white-space: nowrap; padding: 0 0 var(--sp-2); }
+.heat th.who { text-align: left; width: var(--heat-name-w); white-space: nowrap; }
+.heat td.num { text-align: right; padding: 0 var(--sp-5); font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* The all-techs grid in three parts side by side (T-126): the tech names (.heat-names), the days or weeks
+   (.heat-days, the only part that scrolls sideways, when the panel is too narrow for its columns at their
+   minimum) and Total and Flags (.heat-ends), so no cell ever passes under another. Each part is a column of
+   .heat-row lines, the first the head line (.heat-head). Every part takes the same row heights from the tokens
+   here, whatever is in a row, so a line always lines up across the three; nothing in a row is taller than it.
+   The spacing is the table's: --heat-gap around and between every cell. */
+.heat.split { display: flex; padding-inline: var(--heat-gap); --heat-head-lines: 2; --heat-day-min: var(--heat-col-min);
+  --heat-head-h: calc(var(--heat-head-lines) * var(--fs-sm) * var(--lh-base) + var(--sp-2));
+  --heat-row-h: calc(var(--heat-cell-h) + 2 * var(--heat-cell-pad)); }
+.heat.split.mid { --heat-day-min: var(--heat-day-min-mid); }
+/* Past 31 days a day's head is its date alone, and a week's is one line: a one-line head. */
+.heat.split.dates, .heat.split.weeks { --heat-head-lines: 1; }
+.heat.split.weeks { --heat-day-min: var(--heat-week-min); --heat-cell-h: var(--heat-week-cell-h); }
+.heat-names, .heat-days, .heat-ends { display: grid; grid-template-rows: var(--heat-head-h); grid-auto-rows: var(--heat-row-h);
+  row-gap: var(--heat-gap); align-content: start; padding-block: var(--heat-gap); }
+.heat-names { flex: none; width: var(--heat-name-w); }
+.heat-days { flex: 1 1 0; min-width: 0; overflow-x: auto; padding-inline: var(--heat-gap); }
+.heat-ends { flex: none; }
+.heat-row { display: grid; align-items: center; column-gap: var(--heat-gap); }
+/* Day (or week) columns all the same width: they share the part's width, never narrower than the density's minimum. */
+.heat-days > .heat-row { grid-template-columns: repeat(var(--days), minmax(var(--heat-day-min), 1fr)); }
+.heat-ends > .heat-row { grid-template-columns: var(--heat-tot-w) var(--heat-flag-w); }
+.heat-row > * { min-width: 0; padding: var(--heat-cell-pad); }
+.heat-head > * { align-self: stretch; display: grid; align-content: center; font-weight: var(--fw-bold); font-size: var(--fs-sm);
+  color: var(--ink2); text-align: center; white-space: nowrap; padding: 0 0 var(--sp-2); }
+.heat-head > .dnum { font-weight: var(--fw-medium); font-size: var(--fs-xs); }
+.heat-names .who { text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.heat-names .who a { font-weight: var(--fw-bold); }
+.heat-ends .num { text-align: right; padding: 0 var(--sp-5); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hc { display: block; min-width: var(--heat-col-min); height: var(--heat-cell-h); line-height: var(--heat-cell-h); text-align: center; border-radius: var(--radius-sm); font-weight: var(--fw-heavy); font-variant-numeric: tabular-nums; color: var(--ink); position: relative; border: 1px solid transparent; white-space: nowrap; }
+@media (hover: hover) { a.hc:hover { text-decoration: none; border-color: var(--ink-soft); } }
+.hc.h1 { background: var(--heat-1); }
+.hc.h2 { background: var(--heat-2); }
+.hc.h3 { background: var(--heat-3); color: var(--on-accent); }
+.hc.h4 { background: var(--heat-4); color: var(--on-accent); }
+.hc.rest { border: 1px dashed var(--base); color: var(--ink2); font-weight: var(--fw-medium); font-size: var(--fs-sm); }
+.hc.pto { border: 1px dashed var(--pto-edge); background: var(--pto-tint); color: var(--unsure); font-weight: var(--fw-bold); font-size: var(--fs-sm); }
+.hc.zero { background: var(--attention-tint); border-color: var(--attention-edge); color: var(--attention); }
+.hc.miss { background: var(--failure-tint); border-color: var(--failure-edge); color: var(--failure); font-size: var(--fs-sm); }
+.hc.off { border: 1px dotted var(--ink2); }
+.hc.future { border: 1px dashed var(--rule); background: transparent; }
+.hc .fdot { position: absolute; top: var(--sp-2); right: var(--sp-2); width: 7px; height: 7px; border-radius: 50%; background: var(--attention); box-shadow: 0 0 0 2px var(--card-bottom); }
+.hc .fdot.fail { background: var(--failure); }
+/* A density's day token is a minimum (--days, the number of day or week columns, is set by app.js): a panel too
+   narrow for the columns at that minimum (a laptop, a phone) scrolls the days part instead of squeezing the cells.
+   By week, a week cell (tickets over "5/5 shifts") needs --heat-week-min. */
+.heat.split .hc, .heat-stack .hc { min-width: 0; }
+/* From 15 days (mid): smaller numbers, dimmed rest days and a cross for a sick day; a longer range scrolls sideways. */
+.heat.mid .hc, .heat-stack.mid .hc { font-size: var(--fs-sm); }
+/* Every day cell is the same width; a PTO day keeps its violet and says PTO at every density. */
+.heat.mid .hc.rest, .heat-stack.mid .hc.rest { border: 0; background: var(--inset); font-size: 0; }
+.heat.mid .hc.pto, .heat-stack.mid .hc.pto { font-size: var(--fs-xs); }
+/* By week: a week's tickets, with its shifts worked under them (--heat-week-cell-h tall). A tech's calendar: one
+   row per week. */
+.heat.weeks .hc { line-height: 34px; }
+.hc .shifts { display: block; font-size: var(--fs-xs); font-weight: var(--fw-medium); line-height: 1; margin-top: calc(-1 * var(--sp-5)); opacity: .8; }
+.heat.cal .hc { min-width: 64px; }
+/* One tech's calendar: each day's date in its cell's top-left corner (the flag dot has the top-right), in the
+   cell's own ink so it reads on every shade. */
+.hc .cdate { position: absolute; top: var(--sp-1); left: var(--sp-2); line-height: 1; font-size: var(--fs-xs); font-weight: var(--fw-medium); }
+.heat td.wklabel { text-align: left; white-space: nowrap; color: var(--ink2); font-size: var(--fs-sm); padding-right: var(--sp-5); }
+.heat-legend { display: flex; flex-wrap: wrap; gap: var(--sp-4) var(--sp-8); align-items: center; margin-top: var(--sp-6); font-size: var(--fs-sm); color: var(--ink2); }
+.heat-legend .hc { display: inline-block; min-width: 0; width: 40px; height: 20px; line-height: 20px; font-size: var(--fs-xs); margin-right: var(--sp-3); vertical-align: middle; }
+/* The grid stacked for a narrow screen (iPad and phone design §7; app.js stackedGrid and stackedCalendar): a block
+   (.hs-block) per tech, or per week of one tech's calendar, with its name and "Total N · Flags N" on a line
+   (.hs-line, .hs-sum) over its cells across the full width (.hs-cells), in --cols equal columns (7, or 4 By week)
+   under a head line of the days (.hs-head). app.js builds it beside the three-part grid (or the calendar table) and
+   it shows in their place below 1024px. A dated cell (.dated: a calendar's days, a week by its first day) says what
+   it says at its foot, under its date. */
+.heat-stack { display: none; }
+.hs-head, .hs-cells { display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); column-gap: var(--heat-gap); }
+.hs-cells { row-gap: var(--heat-gap); }
+.hs-head { padding-bottom: var(--sp-4); }
+.hs-head > * { text-align: center; font-weight: var(--fw-bold); font-size: var(--fs-sm); color: var(--ink2); white-space: nowrap; }
+.hs-block { border-top: 1px solid var(--rule); padding: var(--sp-6) 0; }
+.hs-line { display: flex; justify-content: space-between; align-items: center; gap: var(--sp-4); margin-bottom: var(--sp-4); }
+.hs-line .who { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--fw-bold); }
+.hs-line .wklabel { color: var(--ink2); font-size: var(--fs-sm); white-space: nowrap; }
+.hs-sum { flex: none; font-size: var(--fs-sm); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.hs-sum b { font-weight: var(--fw-bold); }
+.heat-stack.weeks .hc { height: var(--heat-stack-week-h); }
+.heat-stack.dated .hc { display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+  line-height: var(--lh-num); padding-bottom: var(--sp-2); }
+.heat-stack.dated .hc .shifts { margin-top: 0; }
+/* The By day / By week choice above a grid. */
+.grid-mode { margin: 0 0 var(--sp-6); }
+.grid-mode .pill { padding: var(--sp-2) var(--sp-7); font-size: var(--fs-sm); }
+/* Month names laid over their columns on a line the panel already has (its description, or the By day /
+   By week choice), so they add no row. app.js places them (placeMonthTags). */
+.has-months { position: relative; }
+.has-months .months { position: absolute; inset: 0; pointer-events: none; }
+.has-months .month-tag { position: absolute; top: 50%; transform: translate(-50%, -50%); font-size: var(--fs-md); font-weight: var(--fw-bold); color: var(--ink); white-space: nowrap; }
+.has-months .month-tag + .month-tag { border-left: 1px solid var(--grid); }
+/* Flags reuse the chips: attention for a flag, failure for a missed shift. Table rows are tinted to match. */
+.chip.bad { color: var(--attention); border-color: var(--attention-edge); background: var(--attention-tint); }
+.chip.fail { color: var(--failure); border-color: var(--failure-edge); background: var(--failure-tint); }
+.atable tr.failrow td { background: var(--failure-tint); }
+.atable tr.restrow td { color: var(--ink2); }
+/* Below 1024px (an upright iPad, a phone) the stacked grid and calendar take the place of the three-part grid and
+   the calendar table. From 1024px the grid stays today's, its days part scrolling sideways when a long range
+   doesn't fit, on a sideways iPad as on the PC (the owner's call, iPad and phone design §7). */
+@media (max-width: 1023px) {
+  .heat-stack { display: block; }
+  .heat.split, table.heat.cal { display: none; }
+}
+
+/* From 1120px the Tickets list gets more room: at least --tlist-min, in a 2:3 split. Below that a 440px list
+   would leave the detail too narrow for its scorecard (about 533px of table plus the panel's padding), so the
+   list keeps the 1:2 split. 1120px leaves room for a scrollbar of up to 17px plus a few px to spare. */
+@media (min-width: 1120px) {
+  .panel-row.cols-1-2 { grid-template-columns: minmax(var(--tlist-min), 2fr) minmax(0, 3fr); }
+}
+
+/* Below 1024px a half-width column is too narrow for its tables, so two-column rows go full width. */
+@media (max-width: 1023px) {
+  .panel-row.cols-2, .panel-row.cols-1-2, .panel-row.cols-2-1 { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* The side panel folds away behind the app bar's Menu button below 1024px and on every touch screen at any width (the
+   owner, 2026-10-22: a sideways iPad too); opened, it lies over the page, dimmed behind it by .nav-scrim. */
+@media (max-width: 1023px), (pointer: coarse) {
+  .shell { display: block; }
+  .shell .appbar { clip-path: inset(0 -100vmax -1px); }
+  .sidenav { display: none; position: fixed; top: 0; left: 0; bottom: 0; z-index: var(--z-panel); overflow-y: auto; }
+  .sidenav.open { display: flex; }
+  .appbar .menu { display: inline-flex; align-items: center; }
+  .nav-scrim:not([hidden]) { position: fixed; inset: 0; z-index: var(--z-scrim); background: var(--scrim); }
+}
+.nav-scrim[hidden] { display: none; }
+
+/* A touch screen (iPad and phone design §6): fields at 16px so iOS doesn't zoom on a tap, and every control at least a
+   finger tall: a pill only when it is a link or a button (one beside a date, Today or Tomorrow, is a label), and a
+   tick box through its label, which is its hit area (a Work days box also a finger wide; the days wrap in a card).
+   Hover styling lives in @media (hover: hover) blocks beside each rule, so nothing stays tinted after a tap. A mouse,
+   at any width, keeps the desktop sizes. */
+@media (pointer: coarse) {
+  input, select, textarea { font-size: var(--fs-touch-field); }
+  button, button.small, select, a.pill, button.pill, .sidenav a, .pick-list label, .days-pick label {
+    min-height: var(--tap-min);
+  }
+  .sidenav a, .pick-list label { display: flex; align-items: center; }
+  .days-pick label { min-width: var(--tap-min); }
+}
+
+@media (max-width: 900px) {
+  .panel-row.cols-4-lead { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .panel-row.cols-4-lead > :first-child { grid-column: 1 / -1; }
+  .panel-row.cols-5-lead { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .panel-row.cols-5-lead > :first-child { grid-column: 1 / -1; }
+}
+
+@media (max-width: 640px) {
+  /* The lead tile rows keep two tiles to a row on a phone, the lead tile across both (iPad and phone design §8b). */
+  .panel-row.cols-4-lead, .panel-row.cols-5-lead { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .panel-row.cols-4-lead > :first-child, .panel-row.cols-5-lead > :first-child { grid-column: 1 / -1; }
+  .cmp-sides { grid-template-columns: minmax(0, 1fr); }
+  .app { padding: 0 var(--pad-page-narrow) var(--pad-page-narrow); }
+  .appbar { margin-bottom: var(--pad-page-narrow); gap: var(--sp-4) var(--sp-6); }
+  .panel, .tile { padding: var(--sp-7); }
+  .tiles { grid-template-columns: repeat(auto-fit, minmax(var(--tile-min-narrow), 1fr)); gap: var(--sp-5); }
+  .tile .v, .tile-num { font-size: var(--fs-value-narrow); }
+  .lead-num, .tile .v.lead-num { font-size: var(--fs-lead-narrow); }
+  .mrow { grid-template-columns: minmax(0, 1fr) var(--mnum-w) auto; row-gap: var(--sp-1); }
+  .mrow .mname { grid-column: 1 / -1; }
+  .form-row > label, .form-row > .label { flex-basis: 100%; }
+  .form-row .hint { padding-left: 0; }
+  .atable .barcell { display: none; }
+  /* Run history fits the narrow panel too: tighter cells, and a long status may wrap. */
+  .atable.runs th, .atable.runs td { padding-left: var(--sp-3); padding-right: var(--sp-3); }
+  .atable.runs .run-status { white-space: normal; }
+  .dethead { flex-wrap: wrap; }
+  .timeline-strip { flex-wrap: wrap; row-gap: var(--sp-5); }
+  .timeline-step { flex: 1 1 var(--tl-step-min); }
+  .filt.search { flex: 1 1 100%; }
+  .period-pick .range { flex-direction: column; align-items: flex-start; }
+  .filt.search input { width: auto; flex: 1 1 auto; }
+  /* The scorecard stacks: outcome, check and points on one line, evidence and Disagree under them. */
+  .atable.det thead { display: none; }
+  .atable.det, .atable.det tbody { display: block; }
+  .atable.det tr {
+    display: grid;
+    grid-template-columns: var(--outcome-w) minmax(0, 1fr) auto;
+    border-bottom: 1px solid var(--rule);
+  }
+  .atable.det tr[hidden] { display: none; }
+  .atable.det td { border-bottom: 0; }
+  .atable.det td.ev, .atable.det td:last-child { grid-column: 2 / -1; min-width: 0; }
+  .atable.det tr.override-row td, .atable.det tr.group-head td { grid-column: 1 / -1; }
+  /* A stacked row leaves its first column empty under the mark, so a missed row is tinted as a whole. */
+  .atable.det tr.flagrow { background: var(--attention-row-tint); }
+  .atable.det tr.flagrow td { background: transparent; }
+  .atable.det tr.group-head td { border-bottom: 0; }
+  /* The rubric tables stack into cards: number and summary first, then each field with its label. */
+  .atable.rb thead { display: none; }
+  .atable.rb, .atable.rb tbody { display: block; }
+  .atable.rb tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-3) var(--sp-6);
+    padding: var(--sp-4) 0;
+  }
+  .atable.rb tr[hidden] { display: none; }
+  .atable.rb tr.edit-row { padding-top: 0; }
+  .atable.rb td { border-bottom: 0; padding: 0; }
+  .atable.rb td.num { text-align: left; }
+  /* The summary fills its line beside the number; points and the toggles wrap under it. */
+  .atable.rb td.rb-summary { flex: 1 1 calc(100% - var(--rb-num-slot)); min-width: 0; }
+  .atable.rb td.rb-applies, .atable.rb tr.edit-row td { flex: 1 1 100%; }
+  .atable.rb td.act { flex: 1 1 100%; text-align: left; }
+  .atable.rb td.act button:first-child { margin-left: 0; }
+  .atable.rb tr.edit-row .rb-editor { position: static; max-width: none; }
+  /* A check's two lines (and its open editor) make one card, with its group's one rule under it. */
+  .atable.rb tr.line1 { padding-bottom: 0; }
+  .atable.rb tr.line2 { padding-top: var(--sp-3); }
+  .atable.rb tr.line1 td, .atable.rb tr.line2 td { padding: 0; }
+  .atable.rb .rb-pad { display: none; }
+  .mlabel { display: inline; color: var(--ink2); font-size: var(--fs-sm); margin-right: var(--sp-2); }
+  .ref-head .act { margin-left: 0; flex-basis: 100%; }
+}
+
+/* -- trends: Team activity's Trends screen. The metric panels are the measure selector; the ranking table's
+   headers sort; its rows highlight a tech in the graph. Five panels a row from 1400px, three below, one
+   below 640px; the ranking and the graph stack below 1024px. -- */
+.metric-lead { margin: 0 0 var(--sp-4); font-size: var(--fs-sm); color: var(--ink2); }
+/* The panels' grid keeps no gap between its rows: each panel's own foot margin spaces them, so the part that opens
+   under a row (.metric-detail) adds no space while it is shut. */
+.metric-tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: var(--gap-panel); }
+.metric-tiles > .metric-tile { margin-bottom: var(--gap-panel); }
+/* The part under a row of panels: the picked measure's ranking and graph, sliding open (its one grid row grows from
+   0fr to 1fr) and shut. */
+.metric-detail { grid-column: 1 / -1; display: grid; grid-template-rows: 0fr; opacity: 0;
+  transition: grid-template-rows var(--slide) ease, opacity var(--slide) ease; }
+.metric-detail.open { grid-template-rows: 1fr; opacity: 1; }
+.metric-detail-in { min-height: 0; overflow: hidden; }
+.metric-detail-in > .trends-row { margin-bottom: var(--gap-panel); }
+@media (prefers-reduced-motion: reduce) { .metric-detail { transition: none; } }
+button.tile.metric-tile {
+  text-align: left;
+  font: inherit;
+  color: var(--ink);
+  cursor: pointer;
+  border: 1px solid var(--grid);
+  background: linear-gradient(160deg, var(--card-top), var(--card-bottom));
+  padding: var(--sp-6) var(--sp-8);
+}
+@media (hover: hover) { button.tile.metric-tile:hover { border-color: var(--base); } }
+button.tile.metric-tile:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+button.tile.metric-tile.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.metric-tile .tile-num { font-size: var(--fs-value-narrow); }
+.metric-tile .grp { margin-top: var(--sp-3); font-size: var(--fs-xs); color: var(--ink2); text-transform: uppercase; letter-spacing: var(--ls-label); }
+.trends-row { grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); align-items: stretch; }
+button.th-sort { all: unset; cursor: pointer; font: inherit; color: inherit; }
+button.th-sort.on { color: var(--accent); }
+@media (hover: hover) { button.th-sort:hover { color: var(--accent); } }
+.th-days { display: block; font-size: var(--fs-xs); font-weight: normal; color: var(--ink2); white-space: nowrap; }
+button.th-sort:focus-visible, button.rank-name:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: var(--sp-1); }
+button.rank-name { all: unset; cursor: pointer; font: inherit; font-weight: var(--fw-bold); color: var(--ink); }
+@media (hover: hover) { button.rank-name:hover { color: var(--accent); } }
+/* On a touch screen the sort headers and ranking names are finger-sized too; they come after the `all: unset` above,
+   which would otherwise undo the touch block's minimum. */
+@media (pointer: coarse) {
+  button.th-sort, button.rank-name { display: inline-flex; align-items: center; min-height: var(--tap-min); }
+  .atable.trend-rank td, .atable.trend-rank th { vertical-align: middle; }   /* figures level with the taller names */
+}
+.atable.trend-rank td { padding: var(--sp-3) var(--sp-5); }
+.atable.trend-rank tr.teamrow td { border-top: 1px solid var(--grid); }
+.chart-legend .k3 { display: inline-block; width: var(--sp-8); border-top: 1.5px solid var(--ink2); opacity: .5; vertical-align: middle; margin: 0 var(--sp-2) 0 var(--sp-5); }
+@media (max-width: 1399px) { .metric-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 1023px) { .trends-row { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 639px) { .metric-tiles { grid-template-columns: minmax(0, 1fr); } }
+/* -- end trends */
+
+/* -- 1:1 prep: shared parts its screen added. Any table can put a change, a second line or a pill beside a date in
+   a cell, any screen can confirm something with the toast, any four panels can sit side by side, and any list can
+   scroll inside its panel. */
+/* A change on its own line under a table number (.mdelta's colors: better, worse, flat). */
+.mdelta.cell-delta { display: block; margin-top: var(--sp-1); }
+/* A cell's second line under its number: "3 of 3 good", "1 PTO, 0 sick". */
+.cell-sub { display: block; margin-top: var(--sp-1); font-size: var(--fs-sm); color: var(--ink2); }
+/* A short confirmation in the page's lower right corner ("Copied ..."), shown for a moment. */
+.toast {
+  position: fixed;
+  right: var(--pad-page);
+  bottom: var(--pad-page);
+  z-index: var(--z-toast);
+  background: var(--card-top);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--ink);
+  font-size: var(--fs-md);
+  padding: var(--sp-5) var(--sp-8);
+  opacity: 0;
+  transition: opacity .2s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; }
+/* Four panels side by side: two-up below 1500px, stacked below 1024px. */
+.panel-row.cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1499px) { .panel-row.cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 1023px) { .panel-row.cols-4 { grid-template-columns: minmax(0, 1fr); } }
+/* Four panels with the last one narrower, about 0.55 of the others (1:1 prep's Behind the numbers, Days out last);
+   two-up and stacked as .cols-4 is. */
+.panel-row.cols-4.last-narrow { grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, .55fr); }
+@media (max-width: 1499px) { .panel-row.cols-4.last-narrow { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 1023px) { .panel-row.cols-4.last-narrow { grid-template-columns: minmax(0, 1fr); } }
+/* A heading with what goes with it beside it, on one line that wraps (1:1 Prep: the table's heading with its
+   "Updated …" line from the latest sync). */
+.head-line { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-4) var(--sp-8); margin-bottom: var(--sp-6); }
+.head-line .period-head { margin: 0; }
+.head-line .message:empty { display: none; }
+/* A small pill beside a date in a table cell: Today filled, soon ("Tomorrow", "In 2 days") outlined. It isn't a
+   control, so it keeps its look under the pointer. */
+.pill.cell-pill { padding: 0 var(--sp-4); font-size: var(--fs-sm); font-weight: var(--fw-bold); border-color: var(--grid); }
+.pill.cell-pill.today { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.pill.cell-pill.soon { color: var(--accent); }
+/* A list that scrolls inside its panel past --list-max, its table headers staying in place. */
+.list-scroll { max-height: var(--list-max); overflow-y: auto; }
+.list-scroll thead th { position: sticky; top: 0; background: var(--card-top); }
+/* A longer list's box (the hosted admin's Techs, and Import from Teams Shifts' preview), half as tall again. */
+.list-scroll.tall { max-height: var(--list-max-tall); }
+
+/* Rows as cards (iPad and phone design §8): a table in its box (tableBox in app.js) that is wider than the box gets
+   .cards, at any width, and each body row shows as a card: two to a row when the box has room for two (each card at
+   least --card-min wide and more than a third of the box), else one. The row's first cell is the card's title; each
+   other cell is a line led by its column's label (data-label, from the header), a field taking the line's width; the
+   short numbers (td.fig) follow, each a small box with the figure over its label, several to a line; the row's
+   buttons (td.act) sit at the foot, on the right. The headers stay for screen readers, and one that acts (a sort
+   button, Copy all) shows on a line above the cards. Row states carry over: a flagged or failed row is tinted with an
+   edge on its left, the selected row is outlined, a rest day is muted. */
+.atable.cards, .atable.cards thead { display: block; }
+.atable.cards colgroup { display: none; }
+.atable.cards thead tr { display: flex; flex-wrap: wrap; gap: var(--sp-4) var(--sp-6); }
+.atable.cards thead th { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.atable.cards thead th:has(button) {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  padding: 0 0 var(--sp-6);
+  border: 0;
+  background: transparent;
+}
+.atable.cards tbody {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(max(min(var(--card-min), 100%), calc(100% / 3 + var(--sp-6))), 1fr));
+  gap: var(--sp-6);
+}
+.atable.cards tbody + tbody { margin-top: var(--sp-6); }
+.atable.cards tbody tr {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--card-fig-min), 1fr));
+  align-content: start;
+  gap: var(--sp-4) var(--sp-3);
+  padding: var(--sp-6) var(--sp-7);
+  border: 1px solid var(--grid);
+  border-radius: var(--radius-lg);
+  background: var(--inset);
+}
+.atable.cards tbody tr[hidden] { display: none; }
+@media (hover: hover) { .atable.cards tbody tr:hover { border-color: var(--base); } }
+.atable.cards tbody tr.flagrow {
+  background: linear-gradient(var(--attention-row-tint), var(--attention-row-tint)), var(--inset);
+  box-shadow: inset var(--edge) 0 0 var(--attention);
+}
+.atable.cards tbody tr.failrow {
+  background: linear-gradient(var(--failure-tint), var(--failure-tint)), var(--inset);
+  box-shadow: inset var(--edge) 0 0 var(--failure);
+}
+.atable.cards tbody tr.sel { border-color: var(--accent); }
+.atable.cards tbody tr.restrow { border-style: dashed; background: transparent; }
+/* Each cell a line: its label floats in the room its padding leaves, so its text, chips and fields wrap beside it. */
+.atable.cards tbody tr td {
+  grid-column: 1 / -1;
+  display: flow-root;
+  min-width: 0;
+  padding: 0 0 0 var(--card-label-w);
+  border: 0;
+  text-align: left;
+  white-space: normal;
+}
+.atable.cards tbody tr td:not(.fig) { background: transparent; box-shadow: none; }
+.atable.cards tbody tr.over-limit td:first-child { box-shadow: none; }
+/* A cell with nothing to read or use (labelCells' `blank`: a day with no flags) shows neither its label nor its line. */
+.atable.cards tbody tr td:empty, .atable.cards tbody tr td[hidden], .atable.cards tbody tr td.blank { display: none; }
+.atable.cards tbody tr td::before {
+  content: attr(data-label);
+  box-sizing: border-box;
+  float: left;
+  width: var(--card-label-w);
+  margin-left: calc(-1 * var(--card-label-w));
+  padding-right: var(--sp-4);
+  color: var(--ink2);
+}
+.atable.cards tbody tr td:first-child, .atable.cards tbody tr td:not([data-label]),
+.atable.cards tbody tr td[data-label=""] { padding-left: 0; }
+.atable.cards tbody tr td:first-child::before, .atable.cards tbody tr td:not([data-label])::before,
+.atable.cards tbody tr td[data-label=""]::before { content: none; }
+.atable.cards tbody tr td:first-child { font-size: var(--fs-lg); font-weight: var(--fw-bold); }
+.atable.cards tbody tr td:first-child .note, .atable.cards tbody tr td:first-child .cell-sub { font-weight: normal; }
+.atable.cards tbody tr td.fig {
+  grid-column: auto;
+  order: 1;
+  padding: var(--sp-4) var(--sp-2);
+  border-radius: var(--radius-sm);
+  background: var(--card-top);
+  text-align: center;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+}
+.atable.cards tbody tr td.fig::before, .atable.cards tbody tr td.act::before { content: none; }
+.atable.cards tbody tr td.fig::after {
+  content: attr(data-label);
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--ink2);
+  white-space: normal;
+}
+.atable.cards tbody tr td.act { order: 2; padding-left: 0; text-align: right; }
+/* A card's fields keep inside its line, and a field in a line takes the line's width (Settings, mockup 11: Hours'
+   times, Effective from's date); a day's tick boxes keep their size and wrap. A field in the title isn't bold. */
+.atable.cards td input, .atable.cards td select { max-width: 100%; }
+.atable.cards td:not(.fig):not(.act) input:not([type="checkbox"]):not([type="radio"]),
+.atable.cards td:not(.fig):not(.act) select,
+.atable.cards td:not(.fig):not(.act) textarea { width: 100%; }
+.atable.cards .days-pick { flex-wrap: wrap; }
+.atable.cards tbody tr td:first-child input, .atable.cards tbody tr td:first-child .message { font-weight: normal; }
+/* A table of row groups (a tech and the line of problems under them, an add row and its email line) makes a card of
+   each group, one to a row. */
+.atable.cards tbody.row-group {
+  display: block;
+  padding: var(--sp-6) var(--sp-7);
+  border: 1px solid var(--grid);
+  border-radius: var(--radius-lg);
+  background: var(--inset);
+}
+.atable.cards tbody.row-group tr { padding: 0; border: 0; border-radius: 0; background: transparent; }
+.atable.cards tbody.row-group tr + tr { margin-top: var(--sp-4); }
+/* Flags by tech as cards (mockup 05): a line per tech with its total at the right, then only the kinds of flag the
+   tech had (a kind at 0, td.zero, is left out), each a chip reading "Early finish · 1", a sick day in the failure
+   colour. The empty ::before is the line break between the two. */
+.atable.cards td.zero { display: none; }
+.atable.cards.flag-counts tbody tr { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--sp-3); }
+.atable.cards.flag-counts tbody tr::before { content: ""; flex-basis: 100%; order: 1; }
+.atable.cards.flag-counts tbody tr td:first-child { flex: 1 1 auto; }
+.atable.cards.flag-counts tbody tr td:last-child {
+  order: 0;
+  padding: 0;
+  background: transparent;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-medium);
+}
+.atable.cards.flag-counts tbody tr td:last-child::before {
+  content: attr(data-label) " ";
+  float: none;
+  width: auto;
+  margin: 0;
+  padding: 0;
+}
+.atable.cards.flag-counts tbody tr td:last-child::after { content: none; }
+.atable.cards.flag-counts tbody tr td.fig:not(:last-child) {
+  order: 2;
+  margin-top: var(--sp-4);
+  padding: var(--sp-1) var(--sp-4);
+  border: 1px solid var(--attention-edge);
+  border-radius: var(--radius-pill);
+  background: var(--attention-tint);
+  color: var(--attention);
+  font-size: var(--fs-sm);
+  font-weight: normal;
+}
+.atable.cards.flag-counts tbody tr td.fig:not(:last-child)::before {
+  content: attr(data-label) " · ";
+  float: none;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  color: inherit;
+}
+.atable.cards.flag-counts tbody tr td.fig:not(:last-child)::after { content: none; }
+.atable.cards.flag-counts tbody tr td:has(.chip.fail) {
+  border-color: var(--failure-edge);
+  background: var(--failure-tint);
+  color: var(--failure);
+}
+.atable.cards.flag-counts td .chip { margin: 0; padding: 0; border: 0; background: transparent; color: inherit; font-size: inherit; }
+/* Every flag (and a week's Flags) as cards (mockup 05, the owner's pick): a compact card per flag, its cells (Day,
+   Tech, Flag, What was recorded, the day-off button) in three lines. The day (its link) on the left and the tech on
+   the right of the title line; what was recorded under them, a muted line with no label; the flag's chip on the left
+   and Mark as day off on the right of the foot line (a manager's list has no button). The row's tint and edge stay. */
+.atable.cards.flag-list tbody tr {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "day tech" "seen seen" "flag act";
+  align-items: center;
+}
+.atable.cards.flag-list tbody tr td { padding-left: 0; }
+.atable.cards.flag-list tbody tr td::before { content: none; }
+.atable.cards.flag-list tbody tr td:nth-child(1) { grid-area: day; }
+.atable.cards.flag-list tbody tr td:nth-child(2) { grid-area: tech; text-align: right; font-size: var(--fs-lg); }
+.atable.cards.flag-list tbody tr td:nth-child(3) { grid-area: flag; }
+.atable.cards.flag-list tbody tr td:nth-child(4) { grid-area: seen; }
+.atable.cards.flag-list tbody tr td:nth-child(5) { grid-area: act; }
+.atable.cards.flag-list tbody tr td .chip { margin: 0; }
+
+/* Long lists on narrow screens (iPad and phone design §9): below 1024px a list never scrolls inside the page (nested
+   scrolling is poor with a finger), and a list given a Show all (tableBox's `first`) shows its first rows with the
+   button under them until it is clicked (the box's .all). From 1024px every row shows and the button never does. */
+.show-all { display: none; }
+@media (max-width: 1023px) {
+  .list-scroll, .list-scroll.tall { max-height: none; }
+  .scroll:not(.all) .more { display: none; }
+  .scroll:not(.all) > .show-all { display: block; margin: var(--sp-6) auto 0; }
+}
+
+/* Even row: a two-column row whose columns end level at the bottom, at the window's foot or below it (every hosted
+   person's Settings: drawHostedAdminSettings, drawManagerSettings and a team lead's ownTeamRow in app.js). Every list in
+   it has a fixed box and scrolls past it, so nothing added to a list ever moves a panel: --list-max, --list-max-tall
+   for a .tall list, --list-roomy in a .roomy panel and --list-roomy-lg in a .roomy.lg one (roomy() in app.js). In each
+   column the panel marked .fill (fill() in app.js) takes the room left over: its list's box is the room the column
+   leaves it, never smaller than its own, and grows from nothing (flex basis 0), so its entries never size it. Below
+   1024px the columns stack, so each panel keeps its own height and each list its max-height. */
+@media (min-width: 1024px) {
+  .panel-row.even { align-items: stretch; min-height: calc(100vh - var(--even-reserve)); }
+  .panel-row.even > .stack > .panel > .list-scroll { height: var(--list-max); max-height: none; overflow-y: auto; }
+  .panel-row.even > .stack > .panel > .list-scroll.tall { height: var(--list-max-tall); }
+  .panel-row.even > .stack > .roomy > .list-scroll { height: var(--list-roomy); }
+  .panel-row.even > .stack > .roomy.lg > .list-scroll { height: var(--list-roomy-lg); }
+  .panel-row.even > .stack > .fill { flex: 1 1 auto; display: flex; flex-direction: column; }
+  .panel-row.even > .stack > .fill > .list-scroll { flex: 1 1 0; height: auto; min-height: var(--list-max); }
+  .panel-row.even > .stack > .fill > .list-scroll.tall { height: auto; min-height: var(--list-max-tall); }
+  .panel-row.even > .stack > .fill.roomy > .list-scroll { height: auto; min-height: var(--list-roomy); }
+  .panel-row.even > .stack > .fill.roomy.lg > .list-scroll { height: auto; min-height: var(--list-roomy-lg); }
+}
+/* A table under a list's box that never scrolls away, lined up with the list's columns (the Techs panel's add row):
+   the box and it both keep the scroll bar's room, so the columns line up whether or not the list scrolls. */
+.list-scroll:has(+ .list-foot), .list-foot { scrollbar-gutter: stable; }
+.list-foot { overflow-y: hidden; }
+/* A call over the 10-minute rule in 1:1 prep's Answered calls: stronger than a plain flagged row, so it reads at a
+   glance; an attention edge on the left and the talk time in the attention color. */
+.atable tr.flagrow.over-limit td { background: var(--attention-tint); }
+.atable tr.flagrow.over-limit td:first-child { box-shadow: inset 3px 0 0 var(--attention); }
+.atable tr.flagrow.over-limit td.num { color: var(--attention); font-weight: var(--fw-bold); }
+/* Tight table rows, for a long list in a narrow panel (1:1 prep's answered calls). */
+.atable.tight th, .atable.tight td { padding-top: var(--sp-2); padding-bottom: var(--sp-2); }
+/* The line over a list saying what its lit rows mean ("2 non-urgent calls over 10 min, highlighted"). */
+.flag-key { color: var(--attention); font-size: var(--fs-label); margin: 0 0 var(--sp-2); }
+/* A good chip, the counterpart of .chip.bad. */
+.chip.good { color: var(--accent); border-color: var(--accent); background: var(--accent-tint); }
+/* A satisfaction rating in a list: its day, ticket and Good or Bad chip on one line, then Zendesk's reason and the
+   customer's comment (in quotes), or a note that there is none. */
+.rating-item { padding: var(--sp-2) 0; border-bottom: 1px solid var(--rule); }
+.rating-item:last-child { border-bottom: 0; }
+.rating-line { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: center; }
+.rating-line .chip { margin: 0; }
+.rating-day { color: var(--ink2); min-width: var(--rating-day-w); }
+.rating-say { margin-top: var(--sp-2); color: var(--ink-soft); font-style: italic; }
+.rating-note { margin-top: var(--sp-1); font-size: var(--fs-label); color: var(--ink2); }
+/* A grid of small charts' heading row: its label, a picker, the shared chart key and a note, on one line that wraps
+   (1:1 prep's Trends: Compare, the tech and Team average, what the change is against). */
+.trend-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-4) var(--sp-8); margin: var(--gap-panel) 0 var(--sp-6); }
+.trend-head .panel-label, .trend-head .chart-legend { margin: 0; }
+.trend-note { font-size: var(--fs-sm); color: var(--ink2); }
+/* Small charts four to a row, each a .panel.trend-card: two-up below 1500px, stacked below 1024px. */
+.trend-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap-panel);
+  grid-auto-flow: row dense; }
+/* A clicked card takes two columns and two rows (the owner, 2026-10-22: four times the room); the others flow
+   around it. */
+.trend-card { cursor: pointer; }
+.trend-card.big { cursor: zoom-out; }
+/* A card's Enlarge / Shrink button, at the end of its figures' line: only on a touch screen with the cards side by
+   side, where a tap on a card reads its chart instead of enlarging it (iPad and phone design §10.2). A mouse clicks
+   the card itself; one card to a row is already full width. */
+.trend-grow { display: none; margin-left: auto; }
+@media (pointer: coarse) and (min-width: 1024px) { .trend-grow { display: inline-block; } }
+@media (max-width: 1499px) { .trend-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 1023px) { .trend-grid { grid-template-columns: minmax(0, 1fr); } }
+/* A small chart's latest figure and its change (.mdelta), on one line over the chart. */
+.trend-figs { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-4); margin-bottom: var(--sp-3); }
+.trend-now { font-size: var(--fs-big); font-weight: var(--fw-heavy); color: var(--headline); font-variant-numeric: tabular-nums; }
+/* -- end 1:1 prep */

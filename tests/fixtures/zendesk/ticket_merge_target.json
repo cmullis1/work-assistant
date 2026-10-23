@@ -1,0 +1,15 @@
+{
+  "id": 3990,
+  "subject": "Receipt printer offline at Example Store",
+  "created_at": "2026-10-12T14:00:00Z",
+  "updated_at": "2026-10-12T19:30:00Z",
+  "priority": "high",
+  "status": "open",
+  "tags": ["voice", "receipt_printer"],
+  "via": {"channel": "voice", "source": {"rel": "inbound"}},
+  "custom_fields": [
+    {"id": 1003, "value": "synthetic-target-pass-5521"},
+    {"id": 1005, "value": "Widget Pro"},
+    {"id": 1006, "value": "LOC-2201"}
+  ]
+}

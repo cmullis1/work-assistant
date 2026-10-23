@@ -1,0 +1,24 @@
+{
+  "id": 4101,
+  "subject": "Checkout page shows a blank banner",
+  "created_at": "2026-10-12T18:41:50Z",
+  "updated_at": "2026-10-13T09:05:00Z",
+  "priority": "normal",
+  "status": "open",
+  "tags": ["voice", "web_checkout"],
+  "via": {
+    "channel": "voice",
+    "source": {
+      "from": {"phone": "+1 555 0100", "name": "Morgan Ellis"},
+      "to": {"phone": "+1 555 0199", "name": "Example Support Line"},
+      "rel": "inbound"
+    }
+  },
+  "custom_fields": [
+    {"id": 1001, "value": "low_solved_no_assistance"},
+    {"id": 1002, "value": null},
+    {"id": 1003, "value": "synthetic-pass-7731"},
+    {"id": 1004, "value": ""},
+    {"id": 1005, "value": "Widget Pro"}
+  ]
+}

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Work Assistant</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <div class="shell">
+    <nav class="sidenav" aria-label="Sections">
+      <div class="brand">Work Assistant</div>
+      <a class="parent" data-section="callqa" href="#/overview" hidden>Call QA</a>
+      <a class="sub" data-tab="overview" href="#/overview" hidden>Team overview</a>
+      <a class="sub" data-tab="agents" href="#/agents" hidden>Techs</a>
+      <a class="sub" data-tab="tickets" href="#/tickets" hidden>Tickets</a>
+      <a class="sub" data-tab="rubric" href="#/rubric" hidden>Rubric &amp; rules</a>
+      <a class="parent" data-section="team" href="#/team" hidden>Team</a>
+      <a class="sub" data-tab="team" href="#/team" hidden>Activity</a>
+      <a class="sub" data-tab="trends" href="#/team/trends" hidden>Trends</a>
+      <a class="sub" data-tab="oneonone" href="#/oneonone" hidden>1:1 Prep</a>
+      <span class="gap"></span>
+      <a data-tab="settings" href="#/settings">Settings</a>
+    </nav>
+    <div class="nav-scrim" hidden></div>
+    <div class="app"><div class="inner">
+      <header class="appbar">
+        <div class="title">Work Assistant</div>
+        <span class="badge" id="demo-badge" hidden>Demo data</span>
+        <button class="menu" type="button" aria-expanded="false">☰ Menu</button>
+      </header>
+      <div class="banners" id="banners" aria-live="polite"></div>
+      <div class="loading-bar" id="loading-bar" role="progressbar" aria-label="Loading" hidden></div>
+      <main id="screen"></main>
+    </div></div>
+  </div>
+  <script src="/static/charts.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
