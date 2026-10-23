@@ -71,24 +71,60 @@ To use it for real, `work-assistant setup` asks for a Zendesk API token and an A
 `work-assistant schedule install` adds the daily review to Windows Task Scheduler. `work-assistant --help` lists
 every command.
 
-## How it was built
+## How it works
 
-I'm a support team lead who writes Python and PowerShell. I built Work Assistant with Claude Code: I owned the problem, the design
-decisions and the testing, and Claude Code wrote most of the code.
+A Python package (FastAPI and uvicorn for the server, SQLite for storage, httpx for Zendesk, the Anthropic SDK for
+reviews) serving hand-written HTML, CSS and JavaScript with no front-end framework or build step. The charts are SVG
+drawn by a small `charts.js`. About 18,000 lines of Python and 12,000 of JavaScript and CSS.
 
-- **The problem.** Call reviews were done by hand, so only a small share of calls was ever checked. Before each 1:1
-  I copied a tech's numbers out of a Zendesk report into a spreadsheet by hand, and there was no easy way to see what
-  each tech did with their day.
-- **The decisions.** What a good call is (the scorecard and rules), what counts as a problem, which numbers a lead
-  needs before a 1:1, what data may leave the PC, and how each screen should look, often settled on mockups before
-  it was built.
-- **The testing.** Before trusting the scores I ran a calibration batch of real calls, compared Claude's judgments
-  with mine, and added rules where it misread our standards (a dropped call called straight back, a ticket merged into
-  the right one). The project has over 2,400 automated tests, and each screen has screenshot checks at my two monitor
-  sizes that I look at and accept before a change is done.
-- **Real use.** I use it every day, and the hosted copy serves the other team leads and managers.
+**Fetching from Zendesk.** The Zendesk client is read-only by construction: every request passes through an httpx
+hook that raises before anything is sent if the method is not GET. `zendesk/normalize.py`, the only module that
+knows Zendesk's field names, turns a ticket into the tech's part of one inbound call: the call record, transcript,
+call summary, triage note and the summary email sent afterward, plus the merged-into ticket when there is one.
 
-About 18,000 lines of Python and 12,000 of JavaScript and CSS, with no front-end framework or build step.
+**Measured rules are code, not AI.** Rules that depend on time (call length against the limit, whether and when the
+summary email went out, the gap before a callback) are decided in `timing.py` from the timestamps, rounding up so a
+displayed "10.1 min" never contradicts a strict limit. Claude gets those outcomes as final facts and judges only
+the remaining checks. `scoring.py` turns the outcomes into a score and a verdict as pure functions, with the lead's
+override taking the place of the reviewer's outcome wherever there is one.
+
+**Reviewing with Claude.** Each run sends one request per call through the Message Batches API at half the price.
+The system prompt (instructions, the scorecard and process rules, and the reference documents they cite) depends
+only on the rubric version and is rendered byte for byte the same every time, so it is held in the prompt cache for
+an hour. Ticket text is wrapped in tags with `&`, `<` and `>` escaped, and the prompt says that nothing inside them is
+an instruction. Output is strict JSON: the schema is built per call from the exact check ids the model must answer,
+and the result is checked again on return. Results are matched to calls by id, a cut-off or malformed answer is
+retried once, and refusals are stored as they are and shown in plain English.
+
+**Runs that survive interruption.** Every save of the scorecard or rules is a new immutable version. A run freezes
+its rubric version, model and effort and records the calls it covers, so a run paused or interrupted mid-batch
+finishes on exactly what it started with. Creating a batch is never retried, since a retry after a timeout could
+create a second paid batch: the run is committed as `submitting` first, and an unclear outcome holds its calls until
+the lead checks. Before submitting, the run estimates its cost from token counts and each model's measured output
+per call, and waits for confirmation when the estimate is over the budget limit. A model test re-scores stored calls
+with another model and pairs each result with the review it is compared against, so its report never changes later.
+
+**Team activity, Trends and 1:1 Prep.** An hourly sync reads Zendesk's incremental exports (ticket events, Talk call
+legs and calls, satisfaction ratings) forward from where the last read stopped, saving its position only after each
+page commits, so a failed read resumes cleanly. Each ticket event is split into what the tech did themselves and what
+a trigger did in the same save. Days are judged on each tech's region clock (Dallas, Dubai or Manila time), and the
+schedule can be imported from a Teams Shifts Excel export with openpyxl. Trend lines pool the tallies over a trailing
+window (four weeks, eight for satisfaction) instead of averaging weekly ratios, so a quiet week doesn't swing them.
+1:1 numbers are counted from the stored data each time the page is opened, so nothing is stored that can go stale.
+
+**Two editions, one codebase.** The PC runs the full app on `127.0.0.1`, with secrets in Windows Credential Manager
+through keyring and the daily review in Task Scheduler. The hosted edition answers every Call QA route with 404 and
+checks each request's Cloudflare Access token (RS256 signature, audience, expiry and issuer against Cloudflare's
+published keys, re-read when they rotate) with PyJWT. It runs under systemd timers for the hourly sync and nightly
+backups, made with SQLite's online backup API. Customer text (transcripts, evidence, rating comments) is erased once
+it is older than the retention period, while the scores and counts are kept, so trends survive.
+
+**Demo and tests.** `serve --demo` builds a year of invented history by running the real pipeline with only the
+reviewer swapped for an offline stand-in that answers from the request's own schema. Over 2,000 pytest tests cover
+the Python side with fakes for Zendesk and the Batches API, and the front end's builders are tested in Node against
+a small fake DOM, including chart layout and touch handling.
+
+Built with Claude Code.
 
 ## License
 
